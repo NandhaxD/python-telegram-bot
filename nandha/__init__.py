@@ -4,8 +4,9 @@
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler
 
 
-
+import pyrogram
 import logging
+import config
 
 
 logging.basicConfig(
@@ -16,6 +17,12 @@ logging.basicConfig(
 logging.getLogger('httpx').setLevel(logging.WARNING)
 
 
-TOKEN = '6913439784:AAEhIjZm-oSavOqtR1RXHQ3F__KqDDfCQRw'
+app = ApplicationBuilder().token(config.token).build()
 
-app = ApplicationBuilder().token(TOKEN).build()
+pgram = pyrogram.Client(
+    api_id=config.api_id,
+    api_hash=config.api_hash,
+    bot_token=config.token,
+    plugins=dict(root='nandha')
+)
+

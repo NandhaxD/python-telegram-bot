@@ -5,6 +5,7 @@ import importlib
 import pkgutil
 import asyncio
 import logging
+import pyrogram 
 
 from nandha import app, pgram
 from nandha import plugins  
@@ -36,12 +37,18 @@ import_plugins(plugins)
 
 
 async def main():
-    app.run_polling()
-    asyncio.create_task(pgram.run())
+    async def run_ptb():
+        await app.initialize()
+        await app.start_polling()
 
-  
+    async def run_pyrogram():
+        await pgram.start()
+        await pyrogram.idle()
+        await pgram.stop()
+
+    await asyncio.gather(run_ptb(), run_pyrogram())
+
 if __name__ == '__main__':
-   asyncio.run(main())
-    
+    asyncio.run(main())
     
     

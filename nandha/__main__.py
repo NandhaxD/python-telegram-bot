@@ -36,13 +36,13 @@ def import_plugins(package):
 import_plugins(plugins)
 
 
-async def main():
-    await pgram.start()
+def main():
+    pgram.start()
     print('✨ Started pyrogram Client')
-    await app.run_polling(drop_pending_updates=True)
+    app.run_polling(drop_pending_updates=True)
     print('✨ Started python telegram bot Client')
   
   
 if __name__ == '__main__':
-      asyncio.run(main())
+      main()
   

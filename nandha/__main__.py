@@ -38,8 +38,7 @@ import_plugins(plugins)
 
 async def main():
     async def run_ptb():
-        await app.initialize()
-        await app.start_polling()
+        await app.run_polling()
 
     async def run_pyrogram():
         await pgram.start()

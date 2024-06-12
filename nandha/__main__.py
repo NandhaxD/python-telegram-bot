@@ -43,6 +43,6 @@ def main():
     print('✨ Started python telegram bot Client')
   
   
-if name == '__main__':
+if __name__ == '__main__':
       main()
 

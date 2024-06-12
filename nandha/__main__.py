@@ -6,6 +6,9 @@ import pkgutil
 import asyncio
 import logging
 
+from nandha import app, pgram
+from nandha import plugins  
+
 # Initialize logging
 logging.basicConfig(level=logging.DEBUG)
 
@@ -29,11 +32,18 @@ def import_plugins(package):
 
 
 
+import_plugins(plugins)
 
-if __name__ == '__main__':
-    from nandha import app, pgram
-    from nandha import plugins  # Assuming plugins is a package with __init__.py
-    import_plugins(plugins)
-    app.run_polling()
+
+async def main():
     pgram.start()
+    app.run_polling()
+    
+  
+
+  
+if __name__ == '__main__':
+      asyncio.run(main())
+    
+    
     

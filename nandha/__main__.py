@@ -36,14 +36,12 @@ import_plugins(plugins)
 
 
 async def main():
-    pgram.start()
     app.run_polling()
-    
-  
+    asyncio.create_task(pgram.run())
 
   
 if __name__ == '__main__':
-      asyncio.run(main())
+   asyncio.run(main())
     
     
     

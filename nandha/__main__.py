@@ -3,6 +3,7 @@
 import os
 import importlib
 import pkgutil
+import asyncio
 import logging
 
 # Initialize logging
@@ -28,9 +29,11 @@ def import_plugins(package):
 
 
 
+
 if __name__ == '__main__':
     from nandha import app, pgram
     from nandha import plugins  # Assuming plugins is a package with __init__.py
     import_plugins(plugins)
     app.run_polling()
-    pgram.run()
+    pgram.start()
+    

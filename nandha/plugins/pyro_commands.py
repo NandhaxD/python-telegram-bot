@@ -14,10 +14,11 @@ import subprocess
 
 
 DEVS = [
-  5015417782,
-  7019511932,
-  6381687972,
-  5696053228
+  5015417782, #tofu
+  7019511932, #muku
+  6381687972, #stark
+  5696053228, #nandha
+  1666544436 #bala
 ]
 
 async def aexec(code, pgram, m, message, r, ruser, my, p):

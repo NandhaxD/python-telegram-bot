@@ -31,7 +31,7 @@ async def aexec(code, pgram, m, message, r, ruser, my, p):
 
 
 
-@pgram.on_message(filters.user(DEVS) & filters.command('sh', prefixes=['!','.','?']))
+@pgram.on_message(filters.user(DEVS) & filters.command('shell', prefixes=['!','.','?', '/']))
 async def shell(_, message):
    if len(message.text.split()) > 1:
         code = message.text.split(None, 1)[1]
@@ -52,9 +52,10 @@ async def shell(_, message):
                text=f"<pre language='python'>\nSHELL output:\n{shell}</pre>", 
                quote=True,
                parse_mode=enums.ParseMode.HTML)
-    
+   else:
+      return await message.reply_text("💀 Any Query?")
 
-@pgram.on_message(filters.user(DEVS) & filters.command("ev", prefixes=['!','.','?']))
+@pgram.on_message(filters.user(DEVS) & filters.command("ok", prefixes=['!','.','?','/']))
 async def evaluate(pgram , message):
     status_message = await message.reply_text("`Running ...`")
     try:
@@ -67,8 +68,8 @@ async def evaluate(pgram , message):
     r = message.reply_to_message	
     m = message
     p = print
-    my = getattr(m, m.from_user, None)
-    ruser = getattr(m, r.from_user, None)
+    my = getattr(m, 'from_user', None)
+    ruser = getattr(r, 'from_user', None)
 
     if r:
         reply_to_id = r.id

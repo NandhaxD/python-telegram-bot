@@ -8,7 +8,6 @@ import os
 import io
 import sys
 import time
-import config
 import traceback
 import subprocess
 

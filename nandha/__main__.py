@@ -37,17 +37,11 @@ import_plugins(plugins)
 
 
 async def main():
-    async def run_ptb():
-        await app.run_polling()
-
-    async def run_pyrogram():
-        await pgram.start()
-        await pyrogram.idle()
-        await pgram.stop()
-
-    await asyncio.gather(run_ptb(), run_pyrogram())
+    loop = asyncio.get_event_loop()
+    task1 = loop.create_task(app.run_polling())
+    task2 = loop.create_task(pgram.run())
+    await asyncio.gather(task1, task2)
 
 if __name__ == '__main__':
     asyncio.run(main())
-    
-    
+  

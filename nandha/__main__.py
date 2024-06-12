@@ -29,7 +29,8 @@ def import_plugins(package):
 
 
 if __name__ == '__main__':
-    from nandha import app
+    from nandha import app, pgram
     from nandha import plugins  # Assuming plugins is a package with __init__.py
     import_plugins(plugins)
     app.run_polling()
+    pgram.run()

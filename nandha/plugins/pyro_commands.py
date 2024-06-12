@@ -46,8 +46,8 @@ async def shell(_, message):
                caption=str(code),
                quote=True,
                 )
-            os.remove(filename)
-            return
+           os.remove(filename)
+           return
         else:
             return await message.reply_text(
                text=f"<pre language='python'>\nSHELL output:\n{shell}</pre>", 

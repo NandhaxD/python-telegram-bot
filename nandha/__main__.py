@@ -37,11 +37,12 @@ import_plugins(plugins)
 
 
 async def main():
-    loop = asyncio.get_event_loop()
-    task1 = loop.create_task(app.run_polling())
-    task2 = loop.create_task(pgram.run())
-    await asyncio.gather(task1, task2)
-
+    await pgram.start()
+    print('✨ Started pyrogram Client')
+    await app.run_polling(drop_pending_updates=True)
+    print('✨ Started python telegram bot Client')
+  
+  
 if __name__ == '__main__':
-    asyncio.run(main())
+      main()
   

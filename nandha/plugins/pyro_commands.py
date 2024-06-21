@@ -18,7 +18,8 @@ DEVS = [
   7019511932, #muku
   6381687972, #stark
   5696053228, #nandha
-  1666544436 #bala
+  1666544436, #bala
+  5456798232 #kishore
 ]
 
 async def aexec(code, pgram, m, message, r, ruser, my, p):

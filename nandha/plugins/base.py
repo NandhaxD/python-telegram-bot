@@ -50,7 +50,7 @@ f"""
             InlineKeyboardButton("Channel 🌟", url="NandhaBots.t.me"),
         ],
         [
-            InlineKeyboardButton("💀 Nandha 💀", url=f"tg://user?id={user_id}")
+            InlineKeyboardButton("💀 Nandha 💀", url=f"tg://user?id={user.id}")
         ]
     ]
 

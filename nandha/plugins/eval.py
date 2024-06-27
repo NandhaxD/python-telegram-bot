@@ -47,8 +47,9 @@ async def send(msg, bot, update):
             parse_mode=ParseMode.MARKDOWN_V2,
         )
 
-@devs_only
+
 @command(('e','eval'))
+@devs_only
 async def evaluate(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message = update.effective_message
     
@@ -60,8 +61,9 @@ async def evaluate(update: Update, context: ContextTypes.DEFAULT_TYPE):
     bot = context.bot
     await send(await do(eval, bot, update), bot, update)
 
-@devs_only
+
 @command(('ex', 'py'))
+@devs_only
 async def execute(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message = update.effective_message
     
@@ -125,8 +127,8 @@ async def do(func, bot, update):
             return result
 
 
-@devs_only
 @command(('sh','shell'))
+@devs_only
 async def shell(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     bot = context.bot
@@ -162,8 +164,9 @@ parse_mode=ParseMode.MARKDOWN_V2
        
  
 
-@devs_only
+
 @command('clearlocals')
+@devs_only
 async def clear(update: Update, context: ContextTypes.DEFAULT_TYPE):
   
     bot = context.bot

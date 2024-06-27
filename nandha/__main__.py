@@ -27,7 +27,7 @@ def import_plugins(package):
         importlib.import_module(full_name)
         imported_modules.append(full_name)
 
-    logging.info(f"Successfully imported {len(imported_modules)} modules: {', '.join(imported_modules)}")
+    logging.info(f"Successfully imported {len(imported_modules)} modules: [{', '.join(imported_modules)}]")
 
 
 if __name__ == '__main__':

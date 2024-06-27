@@ -17,22 +17,30 @@ INSERTION_LOCK = threading.RLock()
 
 def add_user(user_id):
     with INSERTION_LOCK:
-        user = SESSION.query(Users).get(user_id)
-        if not user:
-           user = Users(user_id=user_id)
-           SESSION.add(user)
-           SESSION.commit()
+        try:
+            user = SESSION.query(Users).get(user_id)
+            if not user:
+                user = Users(user_id=user_id)
+                SESSION.add(user)
+                SESSION.commit()
+        except Exception as e:
+            SESSION.rollback()
+            print(f"Error adding user: {e}")
 
 def remove_user(user_id):
     with INSERTION_LOCK:
-        user = SESSION.query(Users).get(user_id)
-        if user:
-            SESSION.delete(user)
-            SESSION.commit()
+        try:
+            user = SESSION.query(Users).get(user_id)
+            if user:
+                SESSION.delete(user)
+                SESSION.commit()
+        except Exception as e:
+            SESSION.rollback()
+            print(f"Error removing user: {e}")
 
 def get_all_users():
     try:
-        users = SESSION.query(Users.user_id).all()
-        return [user.user_id for user in users]
-    finally:
-        SESSION.close()
+        return [user[0] for user in SESSION.query(Users.user_id).all()]
+    except Exception as e:
+        print(f"Error getting all users: {e}")
+        return []

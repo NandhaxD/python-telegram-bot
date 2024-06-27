@@ -3,7 +3,7 @@
 
 from functools import wraps
 from telegram.ext import CommandHandler, filters
-from nandha import app
+from nandha import app, DEV_LIST
 
 
 def command(command, filters=None, block=False):
@@ -13,6 +13,18 @@ def command(command, filters=None, block=False):
         return func
     return decorator
 
+
+    
+def devs_only(func):
+    @wraps(func)
+    async def wrapper(update, context, *args, **kwargs):
+        if update.effective_message.sender_chat:
+              return
+        elif update.effective_message.from_user.id not in DEV_LIST:
+              return
+        return await func(update, context, *args, **kwargs)
+    return wrapper
+  
 
 # send_typing_action = send_action(ChatAction.TYPING)
 # send_upload_video_action = send_action(ChatAction.UPLOAD_VIDEO)

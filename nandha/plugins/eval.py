@@ -55,8 +55,13 @@ async def send(msg, bot, update):
 
 
 async def evaluate(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if update.effective_message.from_user.id not in DEV_LIST:
+    message = update.effective_message.
+    if message.from_user.id not in DEV_LIST:
         return
+    elif len(message.text.split()) not >= 2:
+        return await message.reply_text(
+          text="Write something to execute..."
+        )
 
     bot = context.bot
     await send(await do(eval, bot, update), bot, update)
@@ -65,7 +70,11 @@ async def evaluate(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def execute(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_message.from_user.id not in DEV_LIST:
         return
-
+    elif len(message.text.split()) not >= 2:
+        return await message.reply_text(
+          text="Write something to execute..."
+        )
+      
     bot = context.bot
     await send(await do(exec, bot, update), bot, update)
 
@@ -129,7 +138,7 @@ async def shell(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message = update.effective_message
     chat = update.effective_chat
   
-    if not len(message.split()) >= 2:
+    if not len(message.text.split()) >= 2:
        return await message.reply_text(
           "Write something to execute.."
        )

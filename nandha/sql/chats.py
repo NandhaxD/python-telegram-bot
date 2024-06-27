@@ -39,9 +39,10 @@ def remove_chat(chat_id):
             SESSION.rollback()
             print(f"Error removing chat: {e}")
 
+
 def get_all_chats():
     try:
-        return [chat[0] for chat in SESSION.query(Chats.chat_id).all()]
+        return [int(chat[0]) for chat in SESSION.query(Chats.chat_id).all()]
     except Exception as e:
         print(f"Error getting all chats: {e}")
         return []

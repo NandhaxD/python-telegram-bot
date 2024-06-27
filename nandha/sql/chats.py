@@ -18,14 +18,15 @@ INSERTION_LOCK = threading.RLock()
 def add_chat(chat_id):
     with INSERTION_LOCK:
         try:
-            chat = SESSION.query(Chats).get(chat_id)
+            chat = SESSION.query(Chats).get(int(chat_id))  # Convert chat_id to int
             if not chat:
-                chat = Chats(chat_id=chat_id)
+                chat = Chats(chat_id=int(chat_id))  # Convert chat_id to int
                 SESSION.add(chat)
                 SESSION.commit()
         except Exception as e:
             SESSION.rollback()
             print(f"Error adding chat: {e}")
+
 
 def remove_chat(chat_id):
     with INSERTION_LOCK:

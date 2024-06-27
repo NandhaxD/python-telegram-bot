@@ -13,6 +13,7 @@ from telegram import Update
 from telegram.constants import ChatID, ParseMode
 from telegram.ext import ContextTypes, CommandHandler
 from telegram.ext import CallbackContext 
+from nandha.helpers.decorator import command
 
 namespaces = {}
 
@@ -54,6 +55,7 @@ async def send(msg, bot, update):
         )
 
 
+@command(('e','eval'))
 async def evaluate(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message = update.effective_message
     if message.from_user.id not in DEV_LIST:
@@ -66,7 +68,7 @@ async def evaluate(update: Update, context: ContextTypes.DEFAULT_TYPE):
     bot = context.bot
     await send(await do(eval, bot, update), bot, update)
 
-
+@command(('ex', 'py'))
 async def execute(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message = update.effective_message
     if message.from_user.id not in DEV_LIST:
@@ -132,6 +134,7 @@ async def do(func, bot, update):
             return result
 
 
+@command(('sh','shell'))
 async def shell(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_message.from_user.id not in DEV_LIST:
           return
@@ -169,7 +172,7 @@ parse_mode=ParseMode.MARKDOWN_V2
  
 
 
-
+@command('clearlocals')
 async def clear(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_message.from_user.id not in DEV_LIST:
         return
@@ -181,13 +184,3 @@ async def clear(update: Update, context: ContextTypes.DEFAULT_TYPE):
         del namespaces[update.message.chat_id]
     await send("Cleared locals.", bot, update)
 
-
-EVAL_HANDLER = CommandHandler(("e", "ev", "eva", "eval"), evaluate, block=False)
-EXEC_HANDLER = CommandHandler(("x", "ex", "exe", "exec", "py"), execute, block=False)
-SHELL_HANDLER = CommandHandler(("sh","shell"), shell, block=False)
-CLEAR_HANDLER = CommandHandler("clearlocals", clear, block=False)
-
-app.add_handler(EVAL_HANDLER)
-app.add_handler(EXEC_HANDLER)
-app.add_handler(SHELL_HANDLER)
-app.add_handler(CLEAR_HANDLER)

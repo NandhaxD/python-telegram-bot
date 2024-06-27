@@ -17,4 +17,4 @@ def start_session() -> scoped_session:
     return session
 
 # Create a scoped session
-SESSION = start_session(
+SESSION = start_session()

@@ -3,7 +3,7 @@
 
 from functools import wraps
 
-from telegram.ext import CommandHandler, Filters
+from telegram.ext import CommandHandler, filters
 
 
 

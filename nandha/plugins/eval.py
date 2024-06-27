@@ -10,8 +10,8 @@ from contextlib import redirect_stdout
 
 from nandha import app, LOGGER, DEV_LIST
 from telegram import Update
-from telegram.constants import ChatID, ParseMode
-from telegram.ext import ContextTypes, CommandHandler
+from telegram.constants import ParseMode
+from telegram.ext import ContextTypes
 from telegram.ext import CallbackContext 
 from nandha.helpers.decorator import command
 
@@ -43,15 +43,13 @@ async def send(msg, bot, update):
             out_file.name = "output.txt"
             await bot.send_document(
                 chat_id=update.effective_chat.id, 
-                document=out_file, 
-                message_thread_id=update.effective_message.message_thread_id if update.effective_chat.is_forum else None
+                document=out_file
             )
     else:
         await bot.send_message(
             chat_id=update.effective_chat.id,
-            text=f"`{msg}`",
+            text=f"```python\n{output}```",
             parse_mode=ParseMode.MARKDOWN_V2,
-            message_thread_id=update.effective_message.message_thread_id if update.effective_chat.is_forum else None
         )
 
 

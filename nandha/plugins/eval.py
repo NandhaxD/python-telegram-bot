@@ -58,7 +58,7 @@ async def evaluate(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message = update.effective_message
     if message.from_user.id not in DEV_LIST:
         return
-    elif len(message.text.split()) not >= 2:
+    elif len(message.text.split()) < 2:
         return await message.reply_text(
           text="Write something to execute..."
         )
@@ -71,7 +71,7 @@ async def execute(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message = update.effective_message
     if message.from_user.id not in DEV_LIST:
         return
-    elif len(message.text.split()) not >= 2:
+    elif len(message.text.split()) < 2:
         return await message.reply_text(
           text="Write something to execute..."
         )

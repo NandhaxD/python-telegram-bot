@@ -1,10 +1,10 @@
 from nandha.sql import SESSION, BASE
-from sqlalchemy import Column, Integer
+from sqlalchemy import Column, BigInteger
 import threading
 
 class Chats(BASE):
     __tablename__ = 'chats'
-    chat_id = Column(Integer, primary_key=True)
+    chat_id = Column(BigInteger, primary_key=True)
     
     def __init__(self, chat_id):
          self.chat_id = chat_id

@@ -1,5 +1,3 @@
-
-
 import os
 import importlib
 import pkgutil
@@ -21,11 +19,15 @@ def import_plugins(package):
     package_dir = os.path.dirname(package_file)
     logging.debug(f"Package directory: {package_dir}")
 
+    imported_modules = []
+
     for _, name, is_pkg in pkgutil.iter_modules([package_dir]):
         full_name = f"{package_name}.{name}"
         logging.debug(f"Importing module: {full_name}")
         importlib.import_module(full_name)
+        imported_modules.append(full_name)
 
+    logging.info(f"Successfully imported {len(imported_modules)} modules: {', '.join(imported_modules)}")
 
 
 if __name__ == '__main__':

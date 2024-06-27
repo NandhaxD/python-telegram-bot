@@ -4,7 +4,8 @@
 from telegram import Update, constants, helpers, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CommandHandler, ContextTypes
 from nandha import app, SUPPORT_CHAT
-from nandha.sql.users import add_user, get_all_users, get_all_chats, add_chat
+from nandha.sql.users import add_user, get_all_users
+from nandha.sql.chats import get_all_chats, add_chat
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 

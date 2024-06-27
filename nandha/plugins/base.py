@@ -15,7 +15,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     mention = helpers.mention_markdown(user_id=user.id, name=user.first_name, version=2)
   
     if not user.id in get_all_users():
-        add_user(user_id)
+        add_user(user.id)
         await bot.send_message(
             chat_id=SUPPORT_CHAT,
             text=(
@@ -57,10 +57,11 @@ f"""
     buttons = InlineKeyboardMarkup(keyboard)
     
     await bot.send_message(
-        chat_id=update.effective_chat.id,
+        chat_id=chat.id,
         text=(f"*Hello there {mention}, I'm Simple bot made by @NandhaBots using [PythonTelegramBot](https://docs.python-telegram-bot.org) Library\.*"),
         parse_mode=constants.ParseMode.MARKDOWN_V2,
-        reply_markup=buttons)
+        reply_markup=buttons
+    )
 
 start_handler = CommandHandler('start', start)
 app.add_handler(start_handler)

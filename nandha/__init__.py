@@ -2,10 +2,13 @@
 
 
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler
-
+from config import *
 
 
 import logging
+
+
+
 
 
 logging.basicConfig(
@@ -16,6 +19,5 @@ logging.basicConfig(
 logging.getLogger('httpx').setLevel(logging.WARNING)
 
 
-TOKEN = '6913439784:AAEhIjZm-oSavOqtR1RXHQ3F__KqDDfCQRw'
 
 app = ApplicationBuilder().token(TOKEN).build()

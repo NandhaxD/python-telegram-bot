@@ -8,7 +8,7 @@ import subprocess
 
 from contextlib import redirect_stdout
 
-from nandha import app, LOGGER, DEV_LIST
+from nandha import app, DEV_LIST
 from telegram import Update
 from telegram.constants import ParseMode
 from telegram.ext import ContextTypes
@@ -31,11 +31,6 @@ def namespace_of(chat, update, bot):
     return namespaces[chat]
 
 
-def log_input(update):
-    user = update.effective_user.id
-    chat = update.effective_chat.id
-    LOGGER.info(f"IN: {update.effective_message.text} (user={user}, chat={chat})")
-
 
 async def send(msg, bot, update):
     if len(str(msg)) > 2000:
@@ -48,7 +43,7 @@ async def send(msg, bot, update):
     else:
         await bot.send_message(
             chat_id=update.effective_chat.id,
-            text=f"```python\n{output}```",
+            text=f"```python\n{msg}```",
             parse_mode=ParseMode.MARKDOWN_V2,
         )
 

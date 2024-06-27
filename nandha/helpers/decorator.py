@@ -14,14 +14,71 @@ def command(command, filters=None, block=False):
     return decorator
 
 
+
+
+
+def admin_check(permission=None):
+    def decorator(func):
+        @wraps(func)
+        async def wrapper(update, context, *args, **kwargs):
+            chat = update.effective_chat
+            user = update.effective_user
+            message = update.effective_message
+            
+            if getattr(message, 'sender_chat'): 
+                return
+            
+            STATUS = [constants.ChatMemberStatus.ADMINISTRATOR, constants.ChatMemberStatus.OWNER]
+            obj = await chat.get_member(user.id)
+            if obj.status in STATUS:
+                if permission:
+                    if not hasattr(obj, permission):
+                        return await message.reply_text(
+                            f"Sorry, you're missing {permission} permission to access this command."
+                        )
+                return await func(update, context, *args, **kwargs)
+            else:
+                return await message.reply_text(
+                    "Sorry, admin only can access this command."
+                )
+        return wrapper
+      
+
+def admin_check(permission=None):
+     def decorator(func):
+         @wraps(func)
+         async def wrapper(update, context, *args, **kwargs):
+             chat = update.effective_chat
+             user = update.effective_user
+             message = update.effectice_message
+           
+             if getattr(message, 'sender_chat'): return
+             STATUS = [ constants.ChatMemberStatus.ADMINISTRATOR, constants.ChatMemberStatus.OWNER ]
+             obj = await chat.get_member(user.id)
+             if obj.status in STATUS:
+                  if permission:
+                       if not getattr(obj, permission):
+                            return await message.reply_text(
+                               "Sorry, you're missing {permission} permission to access this command."
+                            )
+                       else:
+                           return wrapper(update, context, *args, **kwargs)
+                  else:
+                      return wrapper(update, context, *args, **kwargs)
+             else:
+                 return await message.reply_text(
+                               "Sorry, admin only can access this command."
+                 )
+         return decorator                 
+    
+           
     
 def devs_only(func):
     @wraps(func)
     async def wrapper(update, context, *args, **kwargs):
-        if update.effective_message.sender_chat:
-              return
-        elif update.effective_message.from_user.id not in DEV_LIST:
-              return
+        message = update.effective_message
+        if getattr(message, 'sender_chat'): return
+        elif message.from_user.id not in DEV_LIST: return
         return await func(update, context, *args, **kwargs)
     return wrapper
   

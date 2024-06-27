@@ -2,16 +2,14 @@
 
 
 from functools import wraps
-
 from telegram.ext import CommandHandler, filters
-
-
+from nandha import app
 
 
 def command(command, filters=None, block=False):
     def decorator(func):
         handler = CommandHandler(command, func, filters=filters, block=block)
-        application.add_handler(handler)
+        app.add_handler(handler)
         return func
     return decorator
 

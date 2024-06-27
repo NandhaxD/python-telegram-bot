@@ -8,6 +8,7 @@ from nandha import app
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
+    bot = context.bot 
     user_id = update.effective_user.id
     user_name = update.effective_user.first_name
     mention = helpers.mention_markdown(user_id=user_id, name=user_name, version=2)
@@ -24,7 +25,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     buttons = InlineKeyboardMarkup(keyboard)
     
-    await context.bot.send_message(
+    await bot.send_message(
         chat_id=update.effective_chat.id,
         text=(f"*Hello there {mention}, I'm Simple bot made by @NandhaBots using [PythonTelegramBot](https://docs.python-telegram-bot.org) Library\.*"),
         parse_mode=constants.ParseMode.MARKDOWN_V2,

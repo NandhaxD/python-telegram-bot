@@ -30,7 +30,7 @@ f"""
 
     else:
         if not chat.id in get_all_chats():
-            add_chat(chat_id)
+            add_chat(chat.id)
             await bot.send_message(
             chat_id=SUPPORT_CHAT,
             text=(

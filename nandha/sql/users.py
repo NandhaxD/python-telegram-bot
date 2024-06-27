@@ -41,7 +41,8 @@ def remove_user(user_id):
 
 def get_all_users():
     try:
-        return SESSION.query(Users.user_id).all()
+        user_ids = SESSION.query(Users.user_id).all()
+        return [int(user_id[0]) for user_id in user_ids]
     finally:
         SESSION.close()
 

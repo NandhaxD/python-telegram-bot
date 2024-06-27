@@ -4,16 +4,16 @@
 from telegram import Update, constants, helpers, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CommandHandler, ContextTypes
 from nandha import app, SUPPORT_CHAT
-from nandha.sql.users import add_user, get_all_users
+from nandha.sql.users import add_user, get_all_users, get_all_chats, add_chat
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
-    bot = context.bot 
-    user_id = update.effective_user.id
-    user_name = update.effective_user.first_name
-    mention = helpers.mention_markdown(user_id=user_id, name=user_name, version=2)
+    bot = context.bot
+    chat = update.effective_chat
+    user = update.effective_user
+    mention = helpers.mention_markdown(user_id=user.id, name=user.first_name, version=2)
   
-    if not user_id in get_all_users():
+    if not user.id in get_all_users():
         add_user(user_id)
         await bot.send_message(
             chat_id=SUPPORT_CHAT,
@@ -21,13 +21,27 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 f"""              
 ⚡ *New User*:
 
-*🆔 ID*: `{user_id}`
+*🆔 ID*: `{user.id}`
 *🙋 User*: *{mention}*
 
 """),
           parse_mode=constants.ParseMode.MARKDOWN_V2)
 
-  
+    else:
+        if not chat.id in get_all_chats():
+            add_chat(chat_id)
+            await bot.send_message(
+            chat_id=SUPPORT_CHAT,
+            text=(
+f"""              
+⚡ *New Chat*:
+
+*🆔 ID*: `{chat.id}`
+*🙋 Chat*: *{chat.title}*
+
+"""),
+          parse_mode=constants.ParseMode.MARKDOWN_V2)
+
     
     keyboard = [
         [

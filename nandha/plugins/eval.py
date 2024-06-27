@@ -4,6 +4,8 @@ import io
 import os
 import textwrap
 import traceback
+import subprocess
+
 from contextlib import redirect_stdout
 
 from nandha import app, LOGGER, DEV_LIST
@@ -44,11 +46,10 @@ async def send(msg, bot, update):
                 message_thread_id=update.effective_message.message_thread_id if update.effective_chat.is_forum else None
             )
     else:
-        LOGGER.info(f"OUT: '{msg}'")
         await bot.send_message(
             chat_id=update.effective_chat.id,
             text=f"`{msg}`",
-            parse_mode=ParseMode.MARKDOWN,
+            parse_mode=ParseMode.MARKDOWN_V2,
             message_thread_id=update.effective_message.message_thread_id if update.effective_chat.is_forum else None
         )
 
@@ -77,7 +78,7 @@ def cleanup_code(code):
 
 async def do(func, bot, update):
     log_input(update)
-    content = update.message.text.split(" ", 1)[-1]
+    content = update.message.text.split(maxsplit=1)[1]
     body = cleanup_code(content)
     env = namespace_of(update.message.chat_id, update, bot)
 
@@ -121,6 +122,44 @@ async def do(func, bot, update):
             return result
 
 
+async def shell(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.effective_message.from_user.id not in DEV_LIST:
+          return
+    bot = context.bot
+    message = update.effective_message
+    chat = update.effective_chat
+  
+    if not len(message.split()) >= 2:
+       return await message.reply_text(
+          "Write something to execute.."
+       )
+    code = message.text.split(maxsplit=1)[1]
+    output = subprocess.getoutput(code)
+    if len(str(output)) > 2000:
+        path = f"{chat_id}_shell.txt"
+        with open(path, "w") as file:
+            file.write(output)
+        return await message.reply_document(
+            document=file,
+            caption=f"<code>{code}</code>",
+            parse_mode=ParseMode.MARKDOWN_V2
+)                 
+    else:
+       return await message.reply_text(
+text=
+f"""
+```Command:
+{code}```
+```py
+{output}```
+""",
+parse_mode=ParseMode.MARKDOWN_V2
+)         
+       
+ 
+
+
+
 async def clear(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_message.from_user.id not in DEV_LIST:
         return
@@ -135,8 +174,10 @@ async def clear(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 EVAL_HANDLER = CommandHandler(("e", "ev", "eva", "eval"), evaluate, block=False)
 EXEC_HANDLER = CommandHandler(("x", "ex", "exe", "exec", "py"), execute, block=False)
+SHELL_HANDLER = CommandHandler(("sh","shell"), shell, block=False)
 CLEAR_HANDLER = CommandHandler("clearlocals", clear, block=False)
 
 app.add_handler(EVAL_HANDLER)
 app.add_handler(EXEC_HANDLER)
+app.add_handler(SHELL_HANDLER)
 app.add_handler(CLEAR_HANDLER)

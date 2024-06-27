@@ -14,7 +14,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     mention = helpers.mention_markdown(user_id=user.id, name=user.first_name, version=2)
   
-    if not user.id in get_all_users():
+    if not user.id in get_all_users() and chat.type == constants.ChatType.PRIVATE:
         add_user(user.id)
         await bot.send_message(
             chat_id=SUPPORT_CHAT,

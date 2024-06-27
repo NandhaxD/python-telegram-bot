@@ -13,7 +13,7 @@ from telegram import Update
 from telegram.constants import ParseMode
 from telegram.ext import ContextTypes
 from telegram.ext import CallbackContext 
-from nandha.helpers.decorator import command
+from nandha.helpers.decorator import command, devs_only
 
 namespaces = {}
 
@@ -47,13 +47,12 @@ async def send(msg, bot, update):
             parse_mode=ParseMode.MARKDOWN_V2,
         )
 
-
+@devs_only
 @command(('e','eval'))
 async def evaluate(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message = update.effective_message
-    if message.from_user.id not in DEV_LIST:
-        return
-    elif len(message.text.split()) < 2:
+    
+    if len(message.text.split()) < 2:
         return await message.reply_text(
           text="Write something to execute..."
         )
@@ -61,12 +60,12 @@ async def evaluate(update: Update, context: ContextTypes.DEFAULT_TYPE):
     bot = context.bot
     await send(await do(eval, bot, update), bot, update)
 
+@devs_only
 @command(('ex', 'py'))
 async def execute(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message = update.effective_message
-    if message.from_user.id not in DEV_LIST:
-        return
-    elif len(message.text.split()) < 2:
+    
+    if len(message.text.split()) < 2:
         return await message.reply_text(
           text="Write something to execute..."
         )
@@ -126,10 +125,10 @@ async def do(func, bot, update):
             return result
 
 
+@devs_only
 @command(('sh','shell'))
 async def shell(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if update.effective_message.from_user.id not in DEV_LIST:
-          return
+    
     bot = context.bot
     message = update.effective_message
     chat = update.effective_chat
@@ -163,12 +162,10 @@ parse_mode=ParseMode.MARKDOWN_V2
        
  
 
-
+@devs_only
 @command('clearlocals')
 async def clear(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if update.effective_message.from_user.id not in DEV_LIST:
-        return
-
+  
     bot = context.bot
     log_input(update)
     global namespaces

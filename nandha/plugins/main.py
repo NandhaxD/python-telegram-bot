@@ -1,10 +1,10 @@
 
 
-# nandha/plugins/main.py
 
 from telegram import Update, constants, helpers, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CommandHandler, ContextTypes
-from nandha import app
+from nandha import app, SUPPORT_CHAT
+from nandha.sql.users import add_user, get_all_users
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
@@ -12,7 +12,23 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     user_name = update.effective_user.first_name
     mention = helpers.mention_markdown(user_id=user_id, name=user_name, version=2)
+  
+    if not user_id in get_all_users():
+        add_user(user_id)
+        await bot.send_message(
+            chat_id=SUPPORT_CHAT,
+            text=(
+f"""              
+⚡ *New User*:
 
+*🆔 ID*: `{user_id}`
+*🙋 User*: *{mention}*
+
+"""),
+          parse_mode=constants.ParseMode.MARKDOWN_V2)
+
+  
+    
     keyboard = [
         [
             InlineKeyboardButton("Group 🌟", url="NandhaChat.t.me"),

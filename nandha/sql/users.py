@@ -57,12 +57,16 @@ def remove_user(user_id):
             print(f"Error removing user: {e}")
 
 
-def get_user(user_id):
+def get_user_data(user_id):
     try:
-        return SESSION.query(Users).get(user_id)
+        user = SESSION.query(Users).get(user_id)
+        data = {}
+        if user:
+            data = { key: value for key, value in user.__dict__.items() if not key.startswith('_') }
+        return data
     except Exception as e:
         print(f"Error getting user: {e}")
-        return None
+        return data
 
 
 

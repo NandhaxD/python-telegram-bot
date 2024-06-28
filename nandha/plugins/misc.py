@@ -1,8 +1,8 @@
 import asyncio
 import uuid
+import os
 
-from aiohttp import MultipartWriter
-
+from aiohttp import FormData
 from nandha import aiohttpsession as session, app
 from nandha.helpers.decorator import command
 
@@ -39,17 +39,20 @@ async def Telegraph(update, context):
     )
     
     with open(file_path, 'rb') as f:
-         mpwriter = MultipartWriter()
-         part = mpwriter.append(f, headers={'Content-Type': media_type, 'Content-Disposition': f'form-data; name="file"; filename="{file_name}"'})
-         async with session.post(api_url, data=mpwriter) as response:
-            if response.status == 200:
-                 data = await response.json()
-                 if isinstance(data, dict):
-                     return await msg.edit_text(data)
-                 src = data[0].get('src')
-                 url = 'https://graph.org' + src
-                 return await msg.edit_text(url)
-            else:
-              return await msg.edit_text(
+         file_contents = f.read()
+    
+    form_data = FormData()
+    form_data.add_field("file", file_contents, filename=file_name, content_type=media_type)
+    async with session.post(api_url, data=form_data) as response:
+         os.remove(file_path)
+         if response.status == 200:
+              data = await response.json()
+              if isinstance(data, dict):
+                    return await msg.edit_text("❌ problem while uploading file.")
+              src = data[0].get('src')
+              url = 'https://graph.org' + src
+              return await msg.edit_text(url)
+         else:
+             return await msg.edit_text(
                         text=f"❌ can't upload status code: {str(response.status)}"
                     )

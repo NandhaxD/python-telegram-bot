@@ -24,9 +24,9 @@ async def AdminList(update, context):
 
     owner = next((mem for mem in admins if isinstance(mem, ChatMemberOwner)), None)
     if owner:
-        text = f"👮 Admins in {chat.title}:\n\n👑 <b>OWNER</b>: {mention_html(owner.user.id, owner.user.first_name)}\n\n👮 <b>Admins</b>:"
+        text = f"👮 <b>Admins in {chat.title}</b>:\n\n👑 <b>OWNER</b>: {mention_html(owner.user.id, owner.user.first_name)}\n\n👮 <b>Admins</b>:\n\n"
     else:
-        text = f"👮 Admins in {chat.title}:\n\n"
+        text = f"👮 <b>Admins in {chat.title}</b>:\n\n"
 
 
     for mem in admins:

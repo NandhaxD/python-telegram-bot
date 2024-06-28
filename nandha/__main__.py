@@ -22,7 +22,7 @@ def import_plugins(package):
     imported_modules = []
 
     for _, name, is_pkg in pkgutil.iter_modules([package_dir]):
-        full_name = f"{package_name}.{name}"
+        full_name = f"{name}" # {package_name}.
         logging.debug(f"Importing module: {full_name}")
         importlib.import_module(full_name)
         imported_modules.append(full_name)

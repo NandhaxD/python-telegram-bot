@@ -19,10 +19,10 @@ async def Telegraph(update, context):
             text="⚡ Reply to the animation (GIF) or a photo to upload in graph.org"
         )
     
-    if reply.photo:
+    if reply.photo or reply.sticker:
         file_name = f"{str(uuid.uuid4())}.jpeg"
         media_type = "image/jpeg"
-        file_id = reply.photo[3].file_id
+        file_id = reply.sticker.file_id if reply.sticker else reply.photo[-1].file_id
     elif reply.animation:
         file_name = reply.animation.file_name
         media_type = reply.animation.mime_type

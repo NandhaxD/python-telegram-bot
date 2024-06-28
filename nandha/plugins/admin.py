@@ -7,32 +7,37 @@ from telegram.helpers import mention_html
 from nandha.helpers.decorator import command, admin_check
 
 
+
 @command(('adminlist','admins'))
 @admin_check(None)
 async def AdminList(update, context):
     message = update.message
     chat = message.chat
 
-    msg = await message.reply_text("⚡ Fetching admins please wait...")
+    msg = await message.reply_text("⚡ Fetching Admins...")
     try:
-      admins = await chat.get_administrators()
+        admins = await chat.get_administrators()
     except error.TelegramError as e:
         return await msg.edit_text(
             text=f"❌ Error: {str(e)}"
         )      
 
-    text = f"👮 <b>Admins in {chat.title}</b>:\n\n"
+    owner = next((mem for mem in admins if isinstance(mem, ChatMemberOwner)), None)
+    if owner:
+        text = f"👮 Admins in {chat.title}:\n\n👑 <b>OWNER</b>: {mention_html(owner.user.id, owner.user.first_name)}\n\n👮 <b>Admins</b>:"
+    else:
+        text = f"👮 Admins in {chat.title}:\n\n"
 
 
     for mem in admins:
-         if isinstance(mem, ChatMemberOwner):
-              text += "➣ " + mention_html(mem.user.id, mem.user.first_name) + "( Owner )\n"
-         text += "➣ " + mention_html(mem.user.id, mem.user.first_name) + "\n"
+        if isinstance(mem, ChatMemberOwner):
+             continue
+        text += f"➣ <b>{mention_html(mem.user.id, mem.user.first_name)}</b>\n"
+
     return await msg.edit_text(
-         text=text, parse_mode=constants.ParseMode.HTML)
-    
-
-
+        text=text, parse_mode=constants.ParseMode.HTML
+    )
+  
 
 
 @command('del')

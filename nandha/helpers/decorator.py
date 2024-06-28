@@ -6,9 +6,9 @@ from telegram.ext import CommandHandler, filters
 from nandha import app, DEV_LIST, BOT_ID
 
 
+
 def command(command, filters=None, block=False):
     def decorator(func):
-        @wraps(func)
         handler = CommandHandler(command, func, filters=filters, block=block)
         app.add_handler(handler)
         return func

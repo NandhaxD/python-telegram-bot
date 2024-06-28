@@ -7,7 +7,18 @@ from nandha.helpers.utils import extract_user
 from nandha.helpers.decorator import command, admin_check
 
 
-
+@command('invite')
+@admin_check()
+async def GetInvite(update, context):
+    message = update.message
+    bot = context.bot
+    chat = await bot.get_chat(message.chat.id)
+    link = chat.invite_link
+    await message.reply_text(
+        text=f"{chat.title} Invite Link: {link}"
+    )
+    
+  
 
 
 @command('unban')

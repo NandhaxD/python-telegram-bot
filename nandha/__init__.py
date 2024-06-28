@@ -6,6 +6,7 @@ from config import *
 
 
 import logging
+import aiohttp
 
 
 LOGGER = logging.getLogger(__name__)
@@ -19,5 +20,7 @@ logging.basicConfig(level=logging.INFO, handlers=[logging.FileHandler('logs.txt'
 logging.getLogger('httpx').setLevel(logging.WARNING)
 
 
-
+# Clients
 app = ApplicationBuilder().token(TOKEN).build()
+
+aiohttpsession = aiohttp.ClientSession()

@@ -21,17 +21,24 @@ async def BanChatMember(update, context):
     
     if getattr(reply, 'sender_chat', None):
         sender_chat = reply.sender_chat
-        success = await bot.ban_chat_sender_chat(
-             chat_id=chat.id,
-             sender_chat_id=sender_chat.id
+        try:
+           success = await bot.ban_chat_sender_chat(
+               chat_id=chat.id,
+               sender_chat_id=sender_chat.id
         )
-        if success:
-            return await message.reply_text(
+           if success:
+                return await message.reply_text(
 text=(
 f"""
 <b>⚡ Channel {sender_chat.title} Banned in {chat.title}.</b>
 """), parse_mode=constants.ParseMode.HTML
             )
+        except TelegramError as e:
+            return await message.reply_text(
+              text=f"❌ Error: {str(e)}"
+        )
+
+            
                
     user_id = extract_user(message)
   

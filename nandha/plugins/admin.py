@@ -16,6 +16,7 @@ async def BanChatMember(update, context):
     message = update.message
     reply = message.reply_to_message
     chat = message.chat
+    user = message.from_user
     bot = context.bot
     
     if getattr(reply, 'sender_chat', None):
@@ -34,13 +35,15 @@ f"""
                
     user_id = extract_user(message)
   
-    if not user_id:
+    if not user_id or user_id == user.id:
         return await message.reply_text(
            "Reply to a user or provide their id / mention to ban !"
         )
       
     try:
+      
         member = await bot.get_chat_member(chat.id, user_id)
+      
         success = await bot.ban_chat_member(
              chat_id=chat.id,
              user_id=member.user.id

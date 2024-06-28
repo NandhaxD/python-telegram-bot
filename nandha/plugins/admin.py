@@ -13,17 +13,19 @@ async def AdminList(update, context):
     message = update.message
     chat = message.chat
     bot = context.bot
+
+    msg = await message.reply_text("⚡ Fetching admins please wait...")
     try:
       admins = await bot.get_administrators()
-    except TelegramError as e:
-        return await message.reply_text(
+    except error.TelegramError as e:
+        return await msg.edit_text(
             text=f"❌ Error: {str(e)}"
         )
 
     text = f"<b>👮 Admins in {chat.title}</b>:"
     for user in admins:
          text += "➣ " + mention_html(user.id, user.first_name)
-    return await message.reply_text(
+    return await msg.edit_text(
          text=text, parse_mode=constants.ParseMode.HTML)
     
 

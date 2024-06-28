@@ -20,13 +20,13 @@ def command(command, filters=None, block=False):
 
 def admin_check(permission):
     def decorator(func):
-  #      @wraps(func)
+        @wraps(func)
         async def wrapper(update, context, *args, **kwargs):
             chat = update.effective_chat
             user = update.effective_user
             message = update.effective_message
             
-            if hasattr(message, 'sender_chat'): 
+            if getattr(message, 'sender_chat'): 
                 return
             
             STATUS = [

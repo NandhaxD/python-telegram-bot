@@ -17,7 +17,7 @@ def command(command, filters=None, block=False):
 
 
 
-def admin_check(permission=None):
+def admin_check(permission):
     def decorator(func):
         @wraps(func)
         async def wrapper(update, context, *args, **kwargs):

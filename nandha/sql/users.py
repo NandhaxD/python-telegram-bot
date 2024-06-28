@@ -4,7 +4,7 @@ import threading
 
 class Users(BASE):
     __tablename__ = 'users'
-    user_id = Column(Integer, primary_key=True)
+    user_id = Column(BigInteger, primary_key=True)
     first_name = Column(String)
     username = Column(String)
     is_bot = Column(Boolean)

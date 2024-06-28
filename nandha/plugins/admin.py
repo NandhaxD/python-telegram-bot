@@ -19,12 +19,14 @@ async def AdminList(update, context):
     except error.TelegramError as e:
         return await msg.edit_text(
             text=f"❌ Error: {str(e)}"
-        )
+        )      
 
-    text += f"<b>👮 Admins in {chat.title}</b>:\n\n"
+    text = f"👮 <b>Admins in {chat.title}</b>:\n\n"
+
+
     for mem in admins:
          if isinstance(mem, ChatMemberOwner):
-              text += "➣ " + mention_html(mem.user.id, mem.user.first_name) + "Owner (:\n"
+              text += "➣ " + mention_html(mem.user.id, mem.user.first_name) + "( Owner )\n"
          text += "➣ " + mention_html(mem.user.id, mem.user.first_name) + "\n"
     return await msg.edit_text(
          text=text, parse_mode=constants.ParseMode.HTML)

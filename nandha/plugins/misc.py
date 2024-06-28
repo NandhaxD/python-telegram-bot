@@ -4,7 +4,7 @@ import uuid
 from aiohttp import MultipartWriter
 
 from nandha import aiohttpsession as session, app
-from nandha.helpers.decorators import command
+from nandha.helpers.decorator import command
 
 @command(('tm','tgm'))
 async def Telegraph(update, context):

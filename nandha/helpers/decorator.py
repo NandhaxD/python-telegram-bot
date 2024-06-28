@@ -20,7 +20,7 @@ def command(command, filters=None, block=False):
 
 def admin_check(permission):
     def decorator(func):
-        @wraps(func)
+  #      @wraps(func)
         async def wrapper(update, context, *args, **kwargs):
             chat = update.effective_chat
             user = update.effective_user

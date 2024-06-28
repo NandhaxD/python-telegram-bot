@@ -2,6 +2,7 @@
 
 
 from functools import wraps
+from telegram import ChatMemberOwner
 from telegram.ext import CommandHandler, filters
 from nandha import app, DEV_LIST, BOT_ID
 
@@ -38,7 +39,7 @@ def admin_check(permission=None):
             bot = await chat.get_member(BOT_ID)
           
             if user.status in STATUS and bot.status in STATUS:
-                if permission:
+                if permission and not isinstance(user, ChatMemberOwner):
                     if not hasattr(user, permission) and not hasattr(bot, permission):
                         if not hasattr(user, permission):
                             return await message.reply_text(

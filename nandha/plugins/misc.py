@@ -2,9 +2,9 @@
 import asyncio
 import uuid
 
-from aiohttp.multipart import form, Body
+from aiohttp.multipart import Form, Body
 
-from nandha import aiohttpsession, app
+from nandha import aiohttpsession as session, app
 from nandha.helpers.decorators import command
 
 @command(('tm','tgm'))
@@ -42,7 +42,7 @@ async def Telegraph(update, context):
   
      async with session.post(
          api_url, data={
-            "file": await form(
+            "file": await Form(
                fields={
                  "file": Body(file_path, filename=file_name, contentType=media_type)
                }

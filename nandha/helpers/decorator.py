@@ -3,11 +3,12 @@
 
 from functools import wraps
 from telegram.ext import CommandHandler, filters
-from nandha import app, DEV_LIST
+from nandha import app, DEV_LIST, BOT_ID
 
 
 def command(command, filters=None, block=False):
-    def decorator(func):
+    @wraps(func)
+    def decorator(func): 
         handler = CommandHandler(command, func, filters=filters, block=block)
         app.add_handler(handler)
         return func
@@ -28,24 +29,40 @@ def admin_check(permission=None):
             if hasattr(message, 'sender_chat'): 
                 return
             
-            STATUS = [constants.ChatMemberStatus.ADMINISTRATOR, constants.ChatMemberStatus.OWNER]
-            obj = await chat.get_member(user.id)
-            if obj.status in STATUS:
+            STATUS = [
+               constants.ChatMemberStatus.ADMINISTRATOR, 
+               constants.ChatMemberStatus.OWNER
+            ]
+          
+            user = await chat.get_member(user.id)
+            bot = await chat.get_member(BOT_ID)
+          
+            if user.status in STATUS and bot.status in STATUS:
                 if permission:
-                    if not hasattr(obj, permission):
-                        return await message.reply_text(
-                            f"Sorry, you're missing {permission} permission to access this command."
-                        )
+                    if not hasattr(user, permission) and not hasattr(bot, permission):
+                        if not hasattr(user, permission):
+                            return await message.reply_text(
+                                "You are missing {} permission.".format(permission)
+                            )
+                        else:
+                            return await message.reply_text(
+                                "The bot is missing {} permission.".format(permission)
+                            )
                 return await func(update, context, *args, **kwargs)
             else:
-                return await message.reply_text(
-                    "Sorry, admin only can access this command."
-                )
+                if user.status not in STATUS:
+                    return await message.reply_text(
+                        "You are not an admin in this chat."
+                    )
+                else:
+                    return await message.reply_text(
+                        "The bot is not an admin in this chat."
+                    )
         return wrapper
-      
-                 
+
+
+
     
-           
     
 def devs_only(func):
     @wraps(func)

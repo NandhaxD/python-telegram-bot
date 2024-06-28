@@ -1,7 +1,7 @@
 
 
 from telegram.ext import ContextTypes, CallbackContext
-from telegram import Update, error, constants
+from telegram import Update, error, constants, ChatMemberOwner
 from telegram.helpers import mention_html
 
 from nandha.helpers.decorator import command, admin_check
@@ -21,8 +21,10 @@ async def AdminList(update, context):
             text=f"❌ Error: {str(e)}"
         )
 
-    text = f"<b>👮 Admins in {chat.title}</b>:\n\n"
+    text += f"<b>👮 Admins in {chat.title}</b>:\n\n"
     for mem in admins:
+         if isinstance(mem, ChatMemberOwner):
+              text += "➣ " + mention_html(mem.user.id, mem.user.first_name) + "Owner (:\n"
          text += "➣ " + mention_html(mem.user.id, mem.user.first_name) + "\n"
     return await msg.edit_text(
          text=text, parse_mode=constants.ParseMode.HTML)

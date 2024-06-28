@@ -20,17 +20,20 @@ async def Telegraph(update, context):
         )
     
     if reply.photo:
-        file_name = f"{str(uuid.uuid4())}.jpeg"
-        media_type = "image/jpeg"
+        file_name = f"{str(uuid.uuid4())}.jpg"
+        media_type = "image/jpg"
         file_id = reply.photo[-1].file_id
+      
     elif reply.sticker:
-         file_name = f"{str(uuid.uuid4())}.webp"
-         media_type = "image/webp"
+         file_name = f"{str(uuid.uuid4())}.jpg"
+         media_type = "image/jpg"
          file_id = reply.sticker.file_id
+      
     elif reply.animation:
-        file_name = reply.animation.file_name
-        media_type = reply.animation.mime_type
-        file_id = reply.animation.file_id
+         file_name = reply.animation.file_name
+         media_type = reply.animation.mime_type
+         file_id = reply.animation.file_id
+      
     else:
         return await message.reply_text(
             text="⚡ Reply to the animation (GIF) or a photo to upload in grap.org"
@@ -38,7 +41,9 @@ async def Telegraph(update, context):
     
     msg = await message.reply_text("Downloading...")
     file = await bot.get_file(file_id)
-    file_path = await file.download_to_drive()
+    file_path = await file.download_to_drive(
+       custom_path=file_name
+    )
     
     with open(file_path, 'rb') as f:
          file_contents = f.read()
@@ -46,7 +51,7 @@ async def Telegraph(update, context):
     form_data = FormData()
     form_data.add_field("file", file_contents, filename=file_name, content_type=media_type)
     async with session.post(api_url, data=form_data) as response:
-         # os.remove(file_path)
+         os.remove(file_path)
          if response.status == 200:
               data = await response.json()
               if isinstance(data, dict):

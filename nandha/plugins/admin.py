@@ -13,12 +13,13 @@ from nandha.helpers.decorator import command, admin_check
 async def BanChatMember(update, context):
     message = update.message
     chat = message.chat
+    user = message.from_user
     bot = context.bot
   
     user_id = extract_user(message)
-    if not user_id:
+    if not user_id or user_id == user.id:
         return await message.reply_text(
-           "Reply to a user or give their id / mention to ban!"
+           "Reply to a user or give their id / mention to ban !!"
         )
     try:
         member = await bot.get_chat(user_id)

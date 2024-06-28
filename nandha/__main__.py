@@ -27,8 +27,7 @@ def import_plugins(package):
         importlib.import_module(full_name)
         imported_modules.append(full_name)
 
-    logging.info(f"Successfully imported {len(imported_modules)} modules: [{', '.join(imported_modules.split('.')[1])}]")
-
+    logging.info(f"Successfully imported {len(imported_modules)} modules: [{', '.join(module.rsplit('.', 1)[-1] for module in imported_modules)}]")
 
 if __name__ == '__main__':
     from nandha import app

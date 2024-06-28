@@ -1,13 +1,21 @@
 from nandha.sql import SESSION, BASE
-from sqlalchemy import Column, Integer
+from sqlalchemy import Column, Integer, String, Boolean
 import threading
 
 class Users(BASE):
     __tablename__ = 'users'
     user_id = Column(Integer, primary_key=True)
-    
-    def __init__(self, user_id):
-         self.user_id = user_id
+    first_name = Column(String)
+    username = Column(String)
+    is_bot = Column(Boolean)
+    language_code = Column(String)
+
+    def __init__(self, user_id, first_name, username, is_bot, language_code):
+        self.user_id = user_id
+        self.first_name = first_name
+        self.username = username
+        self.is_bot = is_bot
+        self.language_code = language_code
 
 # Create the table if it doesn't exist
 Users.__table__.create(checkfirst=True)
@@ -15,14 +23,24 @@ Users.__table__.create(checkfirst=True)
 # Thread-safe lock for database operations
 INSERTION_LOCK = threading.RLock()
 
-def add_user(user_id):
+user_objects = {}
+
+def add_user(obj):
     with INSERTION_LOCK:
         try:
+            user_id = obj['id']
             user = SESSION.query(Users).get(user_id)
             if not user:
-                user = Users(user_id=user_id)
+                user = Users(
+                    user_id=user_id,
+                    first_name=obj['first_name'],
+                    username=obj['username'],
+                    is_bot=obj['is_bot'],
+                    language_code=obj['language_code']
+                )
                 SESSION.add(user)
                 SESSION.commit()
+                user_objects[user_id] = obj
         except Exception as e:
             SESSION.rollback()
             print(f"Error adding user: {e}")
@@ -34,13 +52,15 @@ def remove_user(user_id):
             if user:
                 SESSION.delete(user)
                 SESSION.commit()
+                if user_id in user_objects:
+                    del user_objects[user_id]
         except Exception as e:
             SESSION.rollback()
             print(f"Error removing user: {e}")
 
 def get_all_users():
     try:
-        return [user[0] for user in SESSION.query(Users.user_id).all()]
+        return list(user_objects.keys())
     except Exception as e:
         print(f"Error getting all users: {e}")
         return []

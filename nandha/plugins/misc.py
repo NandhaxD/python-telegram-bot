@@ -9,6 +9,8 @@ from nandha.helpers.decorator import command
 @command(('tm','tgm'))
 async def Telegraph(update, context):
      message = update.message
+     bot = context.bot
+
      api_url = "https://telegra.ph/upload"
 
      reply = message.reply_to_message

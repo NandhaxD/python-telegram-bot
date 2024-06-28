@@ -1,6 +1,6 @@
 
 
-from telegram.ext import ContextTypes
+from telegram.ext import ContextTypes, CallbackContext
 from telegram import Update
 
 from nandha.helpers.decorator import command, admin_check
@@ -8,7 +8,7 @@ from nandha.helpers.decorator import command, admin_check
 
 @command('del')
 @admin_check(permission='can_delete_messages')
-async def delete(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def delete(update: Update, context: CallbackContext):
     message = update.effective_message
     reply = message.reply_to_message
     if reply:

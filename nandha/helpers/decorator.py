@@ -43,33 +43,7 @@ def admin_check(permission=None):
                 )
         return wrapper
       
-
-def admin_check(permission=None):
-     def decorator(func):
-         @wraps(func)
-         async def wrapper(update, context, *args, **kwargs):
-             chat = update.effective_chat
-             user = update.effective_user
-             message = update.effectice_message
-           
-             if getattr(message, 'sender_chat'): return
-             STATUS = [ constants.ChatMemberStatus.ADMINISTRATOR, constants.ChatMemberStatus.OWNER ]
-             obj = await chat.get_member(user.id)
-             if obj.status in STATUS:
-                  if permission:
-                       if not getattr(obj, permission):
-                            return await message.reply_text(
-                               "Sorry, you're missing {permission} permission to access this command."
-                            )
-                       else:
-                           return wrapper(update, context, *args, **kwargs)
-                  else:
-                      return wrapper(update, context, *args, **kwargs)
-             else:
-                 return await message.reply_text(
-                               "Sorry, admin only can access this command."
-                 )
-         return decorator                 
+                 
     
            
     

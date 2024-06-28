@@ -3,9 +3,18 @@
 from telegram.ext import ContextTypes, CallbackContext
 from telegram import Update, error, constants, ChatMemberOwner
 from telegram.helpers import mention_html
-
+from nandha.helpers.utils import extract_user
 from nandha.helpers.decorator import command, admin_check
 
+
+
+@command('ban')
+@admin_check('can_restrict_members')
+async def BanChatMember(update, context):
+    message = update.message
+    chat = message.chat
+    user_id = extract_user(message)
+    return await message.reply_text(text=str(user_id))
 
 
 @command(('adminlist','admins'))

@@ -2,7 +2,7 @@
 
 
 from functools import wraps
-from telegram import ChatMemberOwner
+from telegram import ChatMemberOwner, constants
 from telegram.ext import CommandHandler, filters
 from nandha import app, DEV_LIST, BOT_ID
 

@@ -10,7 +10,7 @@ from nandha.helpers.decorator import command, admin_check
 @admin_check('can_delete_messages')
 async def delete(update: Update, context: CallbackContext):
       message = update.effective_message
-      reply = message.reply_to_message:
+      reply = message.reply_to_message
       if reply:
          await reply.delete()
          await message.delete()

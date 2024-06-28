@@ -41,7 +41,7 @@ async def Telegraph(update, context):
     with open(file_path, 'rb') as f:
          mpwriter = MultipartWriter()
          part = mpwriter.append(f, headers={'Content-Type': media_type, 'Content-Disposition': f'form-data; name="file"; filename="{file_name}"'})
-         async with sesession.post(api_url, data=mpwriter) as response:
+         async with session.post(api_url, data=mpwriter) as response:
             if response.status == 200:
                  data = await response.json()
                  if isinstance(data, dict):

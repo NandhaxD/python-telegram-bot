@@ -1,5 +1,5 @@
 from nandha.sql import SESSION, BASE
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import Column, Integer, String, Boolean, BigInteger
 import threading
 
 class Users(BASE):

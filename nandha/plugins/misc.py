@@ -1,3 +1,6 @@
+
+
+
 import asyncio
 import uuid
 import os
@@ -5,8 +8,9 @@ import os
 from aiohttp import FormData
 from nandha import aiohttpsession as session, app
 from nandha.helpers.decorator import command
+from PIL import Image
 
-@command(('tm','tgm'))
+@command(('tm', 'tgm'))
 async def Telegraph(update, context):
     message = update.message
     bot = context.bot
@@ -25,18 +29,18 @@ async def Telegraph(update, context):
         file_id = reply.photo[-1].file_id
       
     elif reply.sticker:
-         file_name = f"{str(uuid.uuid4())}.jpg"
-         media_type = "image/jpg"
-         file_id = reply.sticker.file_id
+        file_name = f"{str(uuid.uuid4())}.webp"
+        media_type = "image/webp"
+        file_id = reply.sticker.file_id
       
     elif reply.animation:
-         file_name = reply.animation.file_name
-         media_type = reply.animation.mime_type
-         file_id = reply.animation.file_id
+        file_name = reply.animation.file_name
+        media_type = reply.animation.mime_type
+        file_id = reply.animation.file_id
       
     else:
         return await message.reply_text(
-            text="⚡ Reply to the animation (GIF) or a photo to upload in grap.org"
+            text="⚡ Reply to the animation (GIF) or a photo to upload in graph.org"
         )
     
     msg = await message.reply_text("Downloading...")
@@ -45,21 +49,33 @@ async def Telegraph(update, context):
        custom_path=file_name
     )
     
+    if reply.sticker:
+        # Convert WebP sticker to JPG
+        with Image.open(file_path) as img:
+            img = img.convert("RGB")
+            converted_file_name = f"{str(uuid.uuid4())}.jpg"
+            converted_file_path = os.path.join(os.path.dirname(file_path), converted_file_name)
+            img.save(converted_file_path, "JPEG")
+            os.remove(file_path)  # Remove the original WebP file
+            file_path = converted_file_path
+            media_type = "image/jpg"
+    
     with open(file_path, 'rb') as f:
-         file_contents = f.read()
+        file_contents = f.read()
     
     form_data = FormData()
-    form_data.add_field("file", file_contents, filename=file_name, content_type=media_type)
+    form_data.add_field("file", file_contents, filename=os.path.basename(file_path), content_type=media_type)
+    
     async with session.post(api_url, data=form_data) as response:
-         os.remove(file_path)
-         if response.status == 200:
-              data = await response.json()
-              if isinstance(data, dict):
-                    return await msg.edit_text("❌ problem while uploading file.")
-              src = data[0].get('src')
-              url = 'https://graph.org' + src
-              return await msg.edit_text(url)
-         else:
-             return await msg.edit_text(
-                        text=f"❌ can't upload status code: {str(response.status)}"
-                    )
+        os.remove(file_path)
+        if response.status == 200:
+            data = await response.json()
+            if isinstance(data, dict):
+                return await msg.edit_text("❌ problem while uploading file.")
+            src = data[0].get('src')
+            url = 'https://graph.org' + src
+            return await msg.edit_text(url)
+        else:
+            return await msg.edit_text(
+                text=f"❌ can't upload status code: {str(response.status)}"
+  )

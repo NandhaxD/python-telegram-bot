@@ -56,6 +56,17 @@ def remove_user(user_id):
             SESSION.rollback()
             print(f"Error removing user: {e}")
 
+
+def get_user(user_id):
+    try:
+        return SESSION.query(Users).get(user_id)
+    except Exception as e:
+        print(f"Error getting user: {e}")
+        return None
+
+
+
+
 def get_all_users():
     try:
         return [user.user_id for user in SESSION.query(Users).all()]

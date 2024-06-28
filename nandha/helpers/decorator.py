@@ -25,7 +25,7 @@ def admin_check(permission=None):
             user = update.effective_user
             message = update.effective_message
             
-            if getattr(message, 'sender_chat'): 
+            if hasattr(message, 'sender_chat'): 
                 return
             
             STATUS = [constants.ChatMemberStatus.ADMINISTRATOR, constants.ChatMemberStatus.OWNER]

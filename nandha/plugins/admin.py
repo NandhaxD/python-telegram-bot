@@ -13,8 +13,31 @@ from nandha.helpers.decorator import command, admin_check
 async def BanChatMember(update, context):
     message = update.message
     chat = message.chat
+    bot = context.bot
+  
     user_id = extract_user(message)
-    return await message.reply_text(text=str(user_id))
+    if not user_id:
+        return await message.reply_text(
+           "Reply to a user or give their id / mention to ban!"
+        )
+    try:
+        member = await bot.get_chat(user_id)
+        success = await bot.ban_chat_member(
+             chat_id=chat.id,
+             user_id=member.id
+        )
+        if success:
+            member_mention = mention_html(member.id, member.first_name)
+            return await message.reply_text(
+text=(
+f"""
+<b>⚡ User {member_mention} Banned in {chat.title}.</b>
+"""), parse_mode=constants.ParseMode.HTML
+            )
+    except error.TelegramError as e:
+        return await message.reply_text(
+          text=f"❌ Error: {str(e)}"
+        )
 
 
 @command(('adminlist','admins'))

@@ -23,7 +23,6 @@ Users.__table__.create(checkfirst=True)
 # Thread-safe lock for database operations
 INSERTION_LOCK = threading.RLock()
 
-user_objects = {}
 
 def add_user(obj):
     with INSERTION_LOCK:
@@ -40,7 +39,7 @@ def add_user(obj):
                 )
                 SESSION.add(user)
                 SESSION.commit()
-                user_objects[user_id] = obj
+                
         except Exception as e:
             SESSION.rollback()
             print(f"Error adding user: {e}")
@@ -52,15 +51,14 @@ def remove_user(user_id):
             if user:
                 SESSION.delete(user)
                 SESSION.commit()
-                if user_id in user_objects:
-                    del user_objects[user_id]
+                
         except Exception as e:
             SESSION.rollback()
             print(f"Error removing user: {e}")
 
 def get_all_users():
     try:
-        return list(user_objects.keys())
+        return [user.user_id for user in SESSION.query(Users).all()]
     except Exception as e:
         print(f"Error getting all users: {e}")
         return []

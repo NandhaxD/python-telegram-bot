@@ -38,19 +38,18 @@ async def Telegraph(update, context):
         custom_path=file_name
     )
     
-    async with aiohttp.ClientSession() as s:
-        with open(file_path, 'rb') as f:
-            mpwriter = MultipartWriter()
-            part = mpwriter.append(f, headers={'Content-Type': media_type, 'Content-Disposition': f'form-data; name="file"; filename="{file_name}"'})
-            async with s.post(api_url, data=mpwriter) as response:
-                if response.status == 200:
-                    data = await response.json()
-                    if isinstance(data, dict):
-                        return await msg.edit_text("❌ Image was upload but error while getting file link.")
-                    src = data[0].get('src')
-                    url = 'https://graph.org' + src
-                    return await msg.edit_text(url)
-                else:
-                    return await msg.edit_text(
+    with open(file_path, 'rb') as f:
+         mpwriter = MultipartWriter()
+         part = mpwriter.append(f, headers={'Content-Type': media_type, 'Content-Disposition': f'form-data; name="file"; filename="{file_name}"'})
+         async with sesession.post(api_url, data=mpwriter) as response:
+            if response.status == 200:
+                 data = await response.json()
+                 if isinstance(data, dict):
+                     return await msg.edit_text("❌ Image was upload but error while getting file link.")
+                 src = data[0].get('src')
+                 url = 'https://graph.org' + src
+                 return await msg.edit_text(url)
+            else:
+              return await msg.edit_text(
                         text=f"❌ can't upload status code: {str(response.status)}"
                     )

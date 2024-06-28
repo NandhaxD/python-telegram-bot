@@ -17,6 +17,7 @@ def command(command, filters=None, block=False):
 
 
 
+
 def admin_check(permission):
     def decorator(func):
         @wraps(func)
@@ -38,27 +39,32 @@ def admin_check(permission):
           
             if user.status in STATUS and bot.status in STATUS:
                 if permission and not isinstance(user, ChatMemberOwner):
-                    if not hasattr(user, permission) and not hasattr(bot, permission):
+                    if not hasattr(user, permission) or not hasattr(bot, permission):
                         if not hasattr(user, permission):
-                            return await message.reply_text(
+                            await message.reply_text(
                                 "You are missing {} permission.".format(permission)
                             )
+                            return
                         else:
-                            return await message.reply_text(
+                            await message.reply_text(
                                 "The bot is missing {} permission.".format(permission)
                             )
+                            return
                 return await func(update, context, *args, **kwargs)
             else:
                 if user.status not in STATUS:
-                    return await message.reply_text(
+                    await message.reply_text(
                         "You are not an admin in this chat."
                     )
+                    return
                 else:
-                    return await message.reply_text(
+                    await message.reply_text(
                         "The bot is not an admin in this chat."
                     )
+                    return
         return wrapper
-      
+    return decorator
+  
 
     
 def devs_only(func):

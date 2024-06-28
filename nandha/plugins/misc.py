@@ -45,7 +45,7 @@ async def Telegraph(update, context):
             if response.status == 200:
                  data = await response.json()
                  if isinstance(data, dict):
-                     return await msg.edit_text("❌ Image was upload but error while getting file link.")
+                     return await msg.edit_text(data)
                  src = data[0].get('src')
                  url = 'https://graph.org' + src
                  return await msg.edit_text(url)

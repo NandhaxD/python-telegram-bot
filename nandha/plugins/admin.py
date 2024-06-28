@@ -22,17 +22,17 @@ async def BanChatMember(update, context):
            "Reply to a user or give their id / mention to ban !!"
         )
     try:
-        member = await bot.get_chat(user_id)
+        member = await bot.get_chat_member(chat.id, user_id)
         success = await bot.ban_chat_member(
              chat_id=chat.id,
              user_id=member.id
         )
         if success:
-            member_mention = mention_html(member.id, member.first_name)
+            member_mention = mention_html(member.user.id, member.user.first_name)
             return await message.reply_text(
 text=(
 f"""
-<b>⚡ User {member_mention} Banned in {chat.title}.</b>
+<b>⚡ {'Bot' if member.user.is_bot else 'User'} {member_mention} Banned in {chat.title}.</b>
 """), parse_mode=constants.ParseMode.HTML
             )
     except error.TelegramError as e:

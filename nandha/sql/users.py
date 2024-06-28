@@ -33,10 +33,10 @@ def add_user(obj):
             if not user:
                 user = Users(
                     user_id=user_id,
-                    first_name=obj['first_name'],
-                    username=obj['username'],
-                    is_bot=obj['is_bot'],
-                    language_code=obj['language_code']
+                    first_name=obj.get('first_name'),
+                    username=obj.get('username'),
+                    is_bot=obj.get('is_bot'),
+                    language_code=obj.get('language_code')
                 )
                 SESSION.add(user)
                 SESSION.commit()

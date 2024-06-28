@@ -12,11 +12,10 @@ from nandha.helpers.decorator import command, admin_check
 async def AdminList(update, context):
     message = update.message
     chat = message.chat
-    bot = context.bot
 
     msg = await message.reply_text("⚡ Fetching admins please wait...")
     try:
-      admins = await bot.get_administrators()
+      admins = await chat.get_administrators()
     except error.TelegramError as e:
         return await msg.edit_text(
             text=f"❌ Error: {str(e)}"
@@ -34,7 +33,7 @@ async def AdminList(update, context):
 
 @command('del')
 @admin_check('can_delete_messages')
-async def delete(update: Update, context: CallbackContext):
+async def delete(update, context):
     message = update.effective_message
     reply = message.reply_to_message
     if reply:

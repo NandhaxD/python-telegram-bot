@@ -7,7 +7,7 @@ from nandha.helpers.decorator import command, admin_check
 
 
 @command('del')
-@admin_check('can_delete_messages')
+@admin_check(permission='can_delete_messages')
 async def delete(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message = update.effective_message
     reply = message.reply_to_message

@@ -9,7 +9,7 @@ from nandha.helpers.decorator import command, admin_check
 
 
 @command(('adminlist','admins'))
-@admin_check(None)
+@admin_check()
 async def AdminList(update, context):
     message = update.message
     chat = message.chat

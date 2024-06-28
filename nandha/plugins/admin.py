@@ -21,9 +21,9 @@ async def AdminList(update, context):
             text=f"❌ Error: {str(e)}"
         )
 
-    text = f"<b>👮 Admins in {chat.title}</b>:"
+    text = f"<b>👮 Admins in {chat.title}</b>:\n\n"
     for mem in admins:
-         text += "➣ " + mention_html(mem.user.id, mem.user.first_name)
+         text += "➣ " + mention_html(mem.user.id, mem.user.first_name) + "\n"
     return await msg.edit_text(
          text=text, parse_mode=constants.ParseMode.HTML)
     

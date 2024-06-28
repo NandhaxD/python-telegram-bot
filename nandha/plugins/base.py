@@ -20,7 +20,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
   
     if chat.type == constants.ChatType.PRIVATE:
         if not user.id in get_all_users():
-             add_user(user.id)
+
+             obj = user.to_dict()
+             add_user(obj)
              await bot.send_message(
             chat_id=SUPPORT_CHAT,
             text=(

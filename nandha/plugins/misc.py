@@ -1,8 +1,7 @@
-
 import asyncio
 import uuid
 
-from aiohttp.multipart import Form, Body
+from aiohttp import MultipartWriter
 
 from nandha import aiohttpsession as session, app
 from nandha.helpers.decorators import command
@@ -39,15 +38,12 @@ async def Telegraph(update, context):
              custom_path=file_name
      )
      
-  
-     async with session.post(
-         api_url, data={
-            "file": await Form(
-               fields={
-                 "file": Body(file_path, filename=file_name, contentType=media_type)
-               }
-            )
-   }) as response:
+
+     mpwriter = MultipartWriter()
+     part = mpwriter.append(Body(file_path, filename=file_name, contentType=media_type))
+     part.set_content_disposition('form-data', filename=file_name)
+     
+     async with session.post(api_url, data=mpwriter) as response:
         if response.status == 200:
             data = await response.json()
             if isinstance(data, dict):
@@ -59,6 +55,3 @@ async def Telegraph(update, context):
            return await msg.edit_text(
                text=f"❌ can't upload status code: {str(response.status)}"
            )
-
-
-

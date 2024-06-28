@@ -7,8 +7,8 @@ from nandha import app, DEV_LIST, BOT_ID
 
 
 def command(command, filters=None, block=False):
-    @wraps(func)
-    def decorator(func): 
+    def decorator(func):
+        @wraps(func)
         handler = CommandHandler(command, func, filters=filters, block=block)
         app.add_handler(handler)
         return func

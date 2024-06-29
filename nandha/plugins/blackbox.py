@@ -56,7 +56,7 @@ async def blackbox(update: Update, context: CallbackContext) -> None:
       
         if reply and (reply.photo or (reply.sticker and not reply.sticker.is_video)):
             file_name = f'blackbox_{message.chat.id}.jpeg'
-            file = await reply.sticker.file_id if reply.sticker else reply.photo[-1].file_id
+            file = reply.sticker.file_id if reply.sticker else reply.photo[-1].file_id
             file_path = await (await bot.get_file(file)).download_to_drive(
                     custom_path=file_name
             )

@@ -20,8 +20,8 @@ async def UserInfo(update, context):
           return await message.reply_text(
                "Can't access by username, reply to the user or give their telegram id"
           )
-     if message.reply_to_message and message.reply_to_message.forward_origin: # to get forward user info
-         user_id = message.reply_to_message.forward_origin.id
+     if message.reply_to_message and message.reply_to_message.forward_origin and message.reply_to_message.forward_origin.sender_user: # to get forward user info
+         user_id = message.reply_to_message.forward_origin.sender_user.id
           
      check = lambda x: x if x else 'Null'
 
@@ -85,6 +85,13 @@ f"""
      if reply:
           text += f"\n*🚹 Replied Tg ID*: `{reply.sender_chat.id if reply.sender_chat else reply.from_user.id}`"
           text += f"\n*📝 Replied Msg ID*: `{reply.message_id}`"
+          if reply.forward_origin:
+               
+               if reply.forward_origin.sender_user:
+                     text += f"\n*👤 Forward Tg ID*: `{reply.forward_origin.sender_user.id}`"
+               elif reply.forward_origin.chat:
+                     text += f"\n*👤 Forward Chat ID*: `{reply.forward_origin.chat.id}`"
+              
           media_type, media_id = get_media_id(reply)
           if media_type and media_id:
                text += f"\n*📁 Replied {media_type.capitalize()} ID*: `{media_id}`"

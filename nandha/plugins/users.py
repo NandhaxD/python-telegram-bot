@@ -24,7 +24,7 @@ async def UserInfo(update, context):
      user = await bot.get_chat(user_id)
      
      text = "*🌐 User info*:"
-     text += f"\n👤 *First Name*: {user.first_name}"
+     text += f"\n\n👤 *First Name*: {user.first_name}"
      text += f"\n🌌 *Last Name*: {check(user.last_name)}"
      text += f"\n🆔 *ID*: `{user.id}`"
      text += f"\n⚡ *Username*: {check(user.username)}"

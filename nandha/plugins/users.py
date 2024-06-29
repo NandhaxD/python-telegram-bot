@@ -6,10 +6,10 @@ from nandha.helpers.utils import get_media_id
 
 
 @command('id')
-async def TelegramID(update, context):
+async def GetTelegramID(update, context):
      '''
      Method command: /id 
-     Method Info: reply to the message or just send to possible telegram ids.
+     Method Info: reply to the message or just send to get the possible telegram ids.
      '''
      bot = context.bot
      message = update.effective_message
@@ -27,7 +27,7 @@ f"""
           text += f"\n*📝 Replied Msg ID*: `{reply.message_id}`"
           media_type, media_id = get_media_id(reply)
           if media_type and media_id:
-               text += f"\n*📁 Replied {media_type} ID*: `{media_id}`"
+               text += f"\n*📁 Replied {media_type.capitalize()} ID*: `{media_id}`"
      return await message.reply_text(
          text=text, parse_mode=constants.ParseMode.MARKDOWN
      )

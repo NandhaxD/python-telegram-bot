@@ -7,7 +7,7 @@ import os
 from aiohttp import FormData
 from nandha import aiohttpsession as session, app
 from nandha.helpers.decorator import command
-from telegram import Update
+from telegram import Update, constants
 from telegram.ext import CallbackContext
 
 def id_generator() -> str:
@@ -43,11 +43,12 @@ async def BlackBoxChat(user_id, messages):
 async def blackbox(update: Update, context: CallbackContext) -> None:
     message = update.message
     bot = context.bot
-    msg = await message.reply_text("🔍")
+    msg = await message.reply_text("⚡")
 
     if len(message.text.split()) == 1:
         return await msg.edit_text(
-            "⚡ Enter some text ask.")
+            text="*⚡ Enter some text ask.*", parse_mode=constants.ParseMode.MARKDOWN
+        )
     else:
         prompt = message.text.split(maxsplit=1)[1]
         user_id = id_generator()
@@ -80,7 +81,7 @@ async def blackbox(update: Update, context: CallbackContext) -> None:
             messages = [{"role": "user", "content": response_json['response'] + "\n#\n" + prompt}]
 
             data = await BlackBoxChat(user_id, messages)
-            return await msg.edit_text(text=data['reply'])
+            return await msg.edit_text(text=data['reply'], parse_mode=constants.ParseMode.MARKDOWN)
           
         else:
             reply = message.reply_to_message
@@ -89,5 +90,5 @@ async def blackbox(update: Update, context: CallbackContext) -> None:
             messages = [{"role": "user", "content": prompt}]
             
             data = await BlackBoxChat(user_id, messages)
-            return await msg.edit_text(text=data['reply'])
+            return await msg.edit_text(text=data['reply'], parse_mode=constants.ParseMode.MARKDOWN)
           

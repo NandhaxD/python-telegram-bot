@@ -45,7 +45,7 @@ async def Paste(update, context):
         ) as response:
              if response.status != 200:
                  return await msg.edit_text(f"❌ Error Status code: {response.status}")
-             data = json.loads(await response.json())
+             data = json.loads(await response.text())
              url = data.get('url')
              raw_url = url + '/raw'
              text = (

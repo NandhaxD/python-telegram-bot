@@ -24,7 +24,7 @@ f"""
 )  
      if reply:
           text += f"\n*Replied Tg ID*: `{reply.sender_chat.id if reply.sender_chat else reply.from_user.id}`"
-          text += f"\n*Replied Msg ID*: `{reply.message.message_id}`"
+          text += f"\n*Replied Msg ID*: `{reply.message_id}`"
           media_id = get_media_id(reply)
           if media_id:
                text += f"\n*Replied Media ID*: `{media_id}`"

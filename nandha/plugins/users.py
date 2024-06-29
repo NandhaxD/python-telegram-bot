@@ -83,14 +83,14 @@ f"""
 """
 )  
      if reply:
-          text += f"\n*🚹 Replied Tg ID*: `{reply.sender_chat.id if reply.sender_chat else reply.from_user.id}`"
+          text += f"*🚹 Replied Tg ID*: `{reply.sender_chat.id if reply.sender_chat else reply.from_user.id}`"
           text += f"\n*📝 Replied Msg ID*: `{reply.message_id}`"
           if reply.forward_origin:
                
-               if reply.forward_origin.sender_user:
-                     text += f"\n*👤 Forward Tg ID*: `{reply.forward_origin.sender_user.id}`"
-               elif reply.forward_origin.chat:
-                     text += f"\n*👤 Forward Chat ID*: `{reply.forward_origin.chat.id}`"
+               if getattr(reply.forward_origin, 'sender_user', None):
+                     text += f"\n*🧑‍🦱 Forward Tg ID*: `{reply.forward_origin.sender_user.id}`"
+               elif getattr(reply.forward_origin, 'chat', None):
+                     text += f"\n*📢 Forward Chat ID*: `{reply.forward_origin.chat.id}`"
               
           media_type, media_id = get_media_id(reply)
           if media_type and media_id:

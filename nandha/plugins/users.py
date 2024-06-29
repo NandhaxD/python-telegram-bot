@@ -19,6 +19,7 @@ async def UserInfo(update, context):
 
      check = lambda x: x if x else 'Null'
 
+     msg = await message.reply_text("Getting user info...")
      
      user = await bot.get_chat(user_id)
      text = "*🌐 User info*:"
@@ -36,8 +37,9 @@ async def UserInfo(update, context):
           await message.reply_photo(
                photo=path, caption=text, parse_mode=constants.ParseMode.MARKDOWN
           )
+          await msg.delete()
      else:
-          await message.reply_text(
+          await msg.edit_text(
                text=text, parse_mode=constants.ParseMode.MARKDOWN
           )
      

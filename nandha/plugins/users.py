@@ -12,12 +12,10 @@ async def UserInfo(update, context):
       Method: /info username | id
       Method info: get user information
      '''
+     
      message = update.message
+     bot = context.bot
      user_id = extract_user(message)
-     if not user_id:
-          return await message.reply_text(
-               "Reply to a user else give them id or mention to get user info."
-          )
 
      check = lambda x: x if x else 'Null'
 

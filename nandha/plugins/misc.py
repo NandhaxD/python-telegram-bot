@@ -4,11 +4,68 @@
 import asyncio
 import uuid
 import os
+import json
 
 from aiohttp import FormData
 from nandha import aiohttpsession as session, app
 from nandha.helpers.decorator import command
 from PIL import Image
+
+
+
+
+@command('paste')
+async def Paste(update, context):
+   message = update.message
+   bot = context.bot
+
+
+   msg = await message.reply_text("⚡ Getting Link...")
+   if reply.document and and reply.document.mime.type.startswith('text'):
+       file = await (await bot.get_file(reply.document.file_id)).download_to_drive()
+       with open(file, 'r') as f:
+            content = f.read()
+       os.remove(file)
+   elif reply.text or reply.caption:
+       content = reply.text or reply.caption
+   else:
+       return await message.edit_text("Reply to a text or text file document...")
+   api_url = "https://dpaste.org/api/"
+   try:
+
+      async with session.post(
+            url=api_url,
+            data={
+                'format': 'json',
+                'content': content,
+                'lexer': 'python',
+                'expires': '604800', #expire in week
+            }, headers={'Content-Type': 'application/x-www-form-urlencoded'}
+        ) as response:
+             if response.status != 200:
+                 return await msg.edit_text(f"❌ Error Status code: {response.status}")
+             data = json.loads(await response.json())
+             url = data.get('url')
+             raw_url = url + '/raw'
+             text = (
+               f"⚡ *Paste View*: {url}"
+               f"\n🌠 *Raw View*: {raw_url}"
+             )
+             return await msg.edit_text(
+                  text=text, parse_mode=constants.ParseMode.MARKDOWN
+             )
+
+   except Exception as e:
+        return await msg.edit_text(f"❌ Error: {str(e)}")
+
+             
+
+
+
+
+
+
+
 
 @command(('tm', 'tgm'))
 async def Telegraph(update, context):

@@ -20,7 +20,9 @@ async def UserInfo(update, context):
           return await message.reply_text(
                "Can't access by username, reply to the user or give their telegram id"
           )
-
+     if message.reply_to_message and message.reply_to_message.forward_origin: # to get forward user info
+         user_id = message.reply_to_message.forward_origin.id
+          
      check = lambda x: x if x else 'Null'
 
      msg = await message.reply_text("Getting user info...")

@@ -5,6 +5,16 @@ from nandha.helpers.decorator import command
 from nandha.helpers.utils import get_media_id
 
 
+
+@command('info')
+async def UserInfo(update, context):
+     '''
+      Method: /info username | id
+      Method info: get user info
+     '''
+     pass
+
+
 @command('id')
 async def GetTelegramID(update, context):
      '''
@@ -14,7 +24,20 @@ async def GetTelegramID(update, context):
      bot = context.bot
      message = update.effective_message
      reply = message.reply_to_message
-  
+
+     if len(message.text.split()) == 2 and message.text.split()[1].isdigit():
+             try:
+                user = await bot.get_chat(message.text.split()[1])
+                text = f"*User {user.first_name}'s ID*: `{user.id}`"
+                return await message.reply_text(
+                      text, parse_mode=constants.ParseMode.MARKDOWN
+                )
+             except Exception as e:
+                    return await message.reply_text(
+                          text=f"❌ Error: {str(e)}"
+                    )
+             
+          
      text = (
 f"""
 *🚹 You're Tg ID*: `{message.sender_chat.id if message.sender_chat else message.from_user.id}`

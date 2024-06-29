@@ -5,6 +5,30 @@
 from telegram.constants import MessageEntityType
 
 
+
+def get_media_id(message):
+    '''
+    Info: 
+      returns a file id of any media in
+      message if no media will return None
+    '''
+    
+    file_id = None
+
+    if message.photo:
+        file_id = message.photo[-1].file_id
+    elif message.animation:
+        file_id = message.animation.file_id
+    elif message.document:
+        file_id = message.document.file_id
+    elif message.voice:
+        file_id = message.voice.file_id
+    elif message.audio:
+        file_id = message.audio.file_id
+      
+    return file_id
+
+
 def extract_user(message):
     text = message.text
     user_id = None

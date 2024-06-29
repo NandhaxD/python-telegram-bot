@@ -23,7 +23,7 @@ async def Paste(update, context):
    reply = message.reply_to_message
 
    msg = await message.reply_text("⚡ Getting Link...")
-   if reply.document and reply.document.mime.type.startswith('text'):
+   if reply.document and reply.document.mime_type.startswith('text'):
        file = await (await bot.get_file(reply.document.file_id)).download_to_drive()
        with open(file, 'r') as f:
             content = f.read()
@@ -50,8 +50,8 @@ async def Paste(update, context):
              url = data.get('url')
              raw_url = url + '/raw'
              text = (
-               f"⚡ *Paste View*: {url}"
-               f"\n🌠 *Raw View*: {raw_url}"
+               f"⚡ *Paste View*:\n{url}"
+               f"\n\n🌠 *Raw View*:\n{raw_url}"
              )
              return await msg.edit_text(
                   text=text, parse_mode=constants.ParseMode.MARKDOWN

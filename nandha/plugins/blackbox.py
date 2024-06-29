@@ -13,7 +13,7 @@ from telegram.ext import CallbackContext
 def id_generator() -> str:
     return str(uuid.uuid4())
 
-async def BlackBoxChat(user_id: str, prompt: str):
+async def BlackBoxChat(user_id, messages):
   
       data = {
                 "messages": messages,

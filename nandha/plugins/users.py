@@ -16,6 +16,10 @@ async def UserInfo(update, context):
      message = update.message
      bot = context.bot
      user_id = extract_user(message)
+     if not user_id:
+          return await message.reply_text(
+               "Can't access by username, reply to the user or give their telegram id"
+          )
 
      check = lambda x: x if x else 'Null'
 

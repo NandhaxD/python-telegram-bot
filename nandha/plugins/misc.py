@@ -16,12 +16,13 @@ from PIL import Image
 
 @command('paste')
 async def Paste(update, context):
+   
    message = update.message
    bot = context.bot
-
+   reply = message.reply_to_message
 
    msg = await message.reply_text("⚡ Getting Link...")
-   if reply.document and and reply.document.mime.type.startswith('text'):
+   if reply.document and reply.document.mime.type.startswith('text'):
        file = await (await bot.get_file(reply.document.file_id)).download_to_drive()
        with open(file, 'r') as f:
             content = f.read()

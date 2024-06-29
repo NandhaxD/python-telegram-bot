@@ -22,15 +22,16 @@ async def UserInfo(update, context):
      msg = await message.reply_text("Getting user info...")
      
      user = await bot.get_chat(user_id)
+     
      text = "*🌐 User info*:"
      text += f"\n👤 *First Name*: {user.first_name}"
      text += f"\n🌌 *Last Name*: {check(user.last_name)}"
      text += f"\n🆔 *ID*: `{user.id}`"
      text += f"\n⚡ *Username*: {check(user.username)}"
-     text += f"\n❤️ *Mention*: {helpers.mention_html(user.id, user.first_name)}"
+     text += f"\n❤️ *Mention*: {helpers.mention_markdown(user.id, user.first_name)}"
      text += f"\n\n🌠 *Bio*: `{check(user.bio)}`"
      if user.personal_chat:
-          text += f"\n💬 *Personal Channel*: `{user.personal_chat.title}`"
+          text += f"\n\n💬 *Channel*: `{user.personal_chat.title}`"
      if user.photo:
           file = await bot.get_file(user.photo.big_file_id)
           path = await file.download_to_drive()

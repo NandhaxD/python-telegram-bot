@@ -84,7 +84,7 @@ async def Wallpapers_com(update, context):
            for idx, ( title , media_url ) in enumerate(image.items()):
 
                 if idx == 7:
-                    text += f"<b>{idx}, {title}</b>"
+                    text += f"{idx}, {title}"
                     media.append(
                        InputMediaPhoto(
                          media=media_url,

@@ -44,6 +44,8 @@ async def fetch_wallpapers(query: str = None, tag: str = 'anime'):
         async with session.get(url) as response:
              soup = BeautifulSoup(await response.text(), 'html.parser')
              page_counter = soup.find('div', class_='page-counter mobi')
+             if not page_counter:
+                  return images_data
              total_pages = int(page_counter.text.split()[-1])
              page = random.randint(1, total_pages)
              url = f"https://wallpapers.com/search/{quote(query)}?p={page}"
@@ -68,10 +70,13 @@ async def Wallpapers_com(update, context):
       if len(message.text.split()) == 1:
           data = await fetch_wallpapers()
       else:
-          data = await fetch_wallpapers(query=message.text.split(maxsplit=1)[1])
+          data = await fetch_wallpapers(
+              query = message.text.split(maxsplit=1)[1]
+          )
         
       media = []
       text = ""
+    
       if len(data) == 0:
           return await message.reply_text(
              "⚡ No media fetched"
@@ -85,7 +90,7 @@ async def Wallpapers_com(update, context):
       for idx, image_key in enumerate(limits):
                 
                 if idx == len(limits) - 1:
-                    text += f"\n{idx}, {image_key['title']}"
+                    text += f"\n[`{idx}`], *{image_key['title']}*"
                     media.append(
                        InputMediaPhoto(
                          media=image_key['url'],
@@ -93,7 +98,7 @@ async def Wallpapers_com(update, context):
                        )
                 )
                 else:
-                    text += f"\n{idx}, {image_key['title']}"
+                    text += f"\n[`{idx}`], *{image_key['title']}*"
                     media.append(
                        InputMediaPhoto(
                          media=image_key['url']
@@ -101,7 +106,7 @@ async def Wallpapers_com(update, context):
                    )
       try:
           return await message.reply_media_group(
-                     media=media, quote=True
+                     media=media, quote=True, parse_mode=constants.ParseMode.MARKDOWN
               )
       except Exception as e:
                 return await msg.edit_text(f"❌ Error: {str(e)}")

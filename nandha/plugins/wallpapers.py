@@ -81,7 +81,7 @@ async def Wallpapers_com(update, context):
       )
 
       limits = data[:8]
-      for idx, image_key in enumerate(limis):
+      for idx, image_key in enumerate(limits):
              
                 if idx == 7:
                     text += f"{idx}, {image_key['title']}"

@@ -19,10 +19,14 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     mention = helpers.mention_markdown(user_id=user.id, name=user.first_name, version=2)
   
     if chat.type == constants.ChatType.PRIVATE:
-        if not user.id in get_all_users():
+
+        users_db = get_all_users()
+      
+        if not user.id in users_db:
 
              obj = user.to_dict()
-             add_user(obj)
+             add_user(obj) # adding the user data to database
+          
              await bot.send_message(
             chat_id=SUPPORT_CHAT,
             text=(
@@ -36,8 +40,10 @@ f"""
           parse_mode=constants.ParseMode.MARKDOWN_V2)
 
     else:
-        if not chat.id in get_all_chats():
-            add_chat(chat.id)
+        chats_db = get_all_chats()
+        if not chat.id in chats_db:
+            add_chat(chat.id) # adding the chat data to database
+          
             await bot.send_message(
             chat_id=SUPPORT_CHAT,
             text=(

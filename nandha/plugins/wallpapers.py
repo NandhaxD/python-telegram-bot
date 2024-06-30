@@ -106,13 +106,12 @@ async def Wallpapers_com(update, context):
                        )
                    )
       try:
-          sent = await message.reply_media_group(
+         await message.reply_media_group(
                      media=media, quote=True
               )
-          if sent:
-               await msg.delete()
+         await msg.delete()
       except Exception as e:
-                return await msg.edit_text(f"❌ Error: {str(e)}")
+             return await message.reply_text(f"❌ Error: {str(e)}")
           
 
   

@@ -82,19 +82,27 @@ async def Wallpapers_com(update, context):
 
       for image in data[:8]:
            for idx, ( title , media_url ) in enumerate(image.items()):
-                text += f"<b>{idx}, {title}</b>"
-                media.append(
+
+                if idx == 7:
+                    text += f"<b>{idx}, {title}</b>"
+                    media.append(
+                       InputMediaPhoto(
+                         media=media_url,
+                         caption=text
+                       )
+                )
+                else:
+                    text += f"<b>{idx}, {title}</b>"
+                    media.append(
                        InputMediaPhoto(
                          media=media_url
                        )
                    )
-      if len(media) > 0:
-           media[0].caption = text
-           try:
-               return await message.reply_media_group(
+      try:
+          return await message.reply_media_group(
                      media=media, quote=True, parse_mode=constants.ParseMode.HTML
-                   )
-           except Exception as e:
+              )
+      except Exception as e:
                 return await msg.edit_text(f"❌ Error: {str(e)}")
           
 

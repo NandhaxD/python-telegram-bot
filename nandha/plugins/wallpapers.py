@@ -85,7 +85,7 @@ async def Wallpapers_com(update, context):
               f"⚡ Successfully fetched {len(data)} sending media..."
       )
 
-      limits = data[:8]
+      limits = data[:10]
       
       for idx, image_key in enumerate(limits, start=1):
                 

@@ -90,7 +90,7 @@ async def Wallpapers_com(update, context):
       for idx, image_key in enumerate(limits, start=1):
                 
                 if idx == len(limits):
-                    text += f"\n[`{idx}`], *{image_key['title']}*"
+                    text += f"[`{idx}`], *{image_key['title']}*"
                     media.append(
                        InputMediaPhoto(
                          media=image_key['url'],
@@ -99,7 +99,7 @@ async def Wallpapers_com(update, context):
                        )
                 )
                 else:
-                    text += f"\n[`{idx}`], *{image_key['title']}*"
+                    text += f"[`{idx}`], *{image_key['title']}*\n"
                     media.append(
                        InputMediaPhoto(
                          media=image_key['url']

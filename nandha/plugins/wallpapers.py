@@ -45,8 +45,10 @@ async def fetch_wallpapers(query: str = None, tag: str = 'anime'):
              soup = BeautifulSoup(await response.text(), 'html.parser')
              page_counter = soup.find('div', class_='page-counter mobi')
              if not page_counter:
-                  return images_data
-             total_pages = int(page_counter.text.split()[-1])
+                total_pages = 1
+             else:
+                total_pages = int(page_counter.text.split()[-1])
+               
              page = random.randint(1, total_pages)
              url = f"https://wallpapers.com/search/{quote(query)}?p={page}"
              async with session.get(url) as response:

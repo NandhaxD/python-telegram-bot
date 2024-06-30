@@ -39,7 +39,8 @@ def add_user(obj):
                 )
                 SESSION.add(user)
                 SESSION.commit()
-                
+              
+            return    
         except Exception as e:
             SESSION.rollback()
             print(f"Error adding user: {e}")

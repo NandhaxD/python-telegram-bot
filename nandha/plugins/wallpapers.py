@@ -94,7 +94,8 @@ async def Wallpapers_com(update, context):
                     media.append(
                        InputMediaPhoto(
                          media=image_key['url'],
-                         caption=text
+                         caption=text,
+                         parse_mode=constants.ParseMode.MARKDOWN
                        )
                 )
                 else:
@@ -105,9 +106,11 @@ async def Wallpapers_com(update, context):
                        )
                    )
       try:
-          return await message.reply_media_group(
-                     media=media, quote=True, parse_mode=constants.ParseMode.MARKDOWN
+          sent = await message.reply_media_group(
+                     media=media, quote=True
               )
+          if sent:
+               await msg.delete()
       except Exception as e:
                 return await msg.edit_text(f"❌ Error: {str(e)}")
           

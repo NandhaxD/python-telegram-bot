@@ -82,7 +82,7 @@ async def Wallpapers_com(update, context):
 
       limits = data[:6]
       await message.reply_text(
-        limts
+        limits
       )
       for idx, image_key in enumerate(limits):
                 

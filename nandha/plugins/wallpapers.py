@@ -36,7 +36,7 @@ async def fetch_wallpapers(query: str = None, tag: str = 'anime'):
                         title = a_tag.get('title') if a_tag else None
                         img_url = img_tag.get('data-src') if img_tag else None
                         if title and img_url:
-                            image_url = ''.join(url.split('/')[:-1]) + img_url
+                            image_url = 'https://wallpapers.com' + img_url
                             images_data.append({'title': title, 'url': image_url})
 
     else:
@@ -56,7 +56,7 @@ async def fetch_wallpapers(query: str = None, tag: str = 'anime'):
                         title = a_tag.get('title') if a_tag else None
                         img_url = img_tag.get('data-src') if img_tag else None
                         if title and img_url:
-                            image_url = '/'.join(url.split('/')[:-1]) + img_url
+                            image_url = 'https://wallpapers.com' + img_url
                             images_data.append({'title': title, 'url': image_url})
 
     return images_data

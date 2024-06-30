@@ -82,24 +82,21 @@ async def Wallpapers_com(update, context):
 
       limits = data[:8]
       for image in limits:
-           for idx, ( title , media_url ) in enumerate(image.items()):
-
-                await message.reply_text(
-                      text=(idx, title, media_url)
-                )
+           for idx, image_key in enumerate(image):
+             
                 if idx == 7:
-                    text += f"{idx}, {title}"
+                    text += f"{idx}, {image_key['title']}"
                     media.append(
                        InputMediaPhoto(
-                         media=media_url,
+                         media=image_key['url'],
                          caption=text
                        )
                 )
                 else:
-                    text += f"{idx}, {title}"
+                    text += f"{idx}, {image_key['title']}"
                     media.append(
                        InputMediaPhoto(
-                         media=media_url
+                         media=image_key['url']
                        )
                    )
       try:

@@ -142,7 +142,7 @@ async def shell(update: Update, context: ContextTypes.DEFAULT_TYPE):
     code = message.text.split(maxsplit=1)[1]
     output = subprocess.getoutput(code)
     if len(str(output)) > 2000:
-        path = f"{chat_id}_shell.txt"
+        path = f"{chat.id}_shell.txt"
         with open(path, "w") as file:
             file.write(output)
         return await message.reply_document(

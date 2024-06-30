@@ -8,6 +8,8 @@ from nandha.helpers.decorator import command
 from telegram import constants, InputMediaPhoto
 
 
+import random
+
 async def fetch_wallpapers(query: str = None, tag: str = 'anime'):
     '''
     parameter: query - optional, tag - default anime

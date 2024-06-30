@@ -80,9 +80,13 @@ async def Wallpapers_com(update, context):
               f"⚡ Successfully fetched {len(data)} sending media..."
       )
 
-      for image in data[:8]:
+      limits = data[:8]
+      for image in limits:
            for idx, ( title , media_url ) in enumerate(image.items()):
 
+                await message.reply_text(
+                      text=(idx, title, media_url)
+                )
                 if idx == 7:
                     text += f"{idx}, {title}"
                     media.append(

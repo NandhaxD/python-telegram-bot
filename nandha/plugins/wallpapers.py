@@ -84,7 +84,7 @@ async def Wallpapers_com(update, context):
       
       for idx, image_key in enumerate(limits):
                 
-                if idx == limits - 1:
+                if idx == len(limits) - 1:
                     text += f"\n{idx}, {image_key['title']}"
                     media.append(
                        InputMediaPhoto(

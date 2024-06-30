@@ -92,7 +92,7 @@ async def Wallpapers_com(update, context):
                        )
                 )
                 else:
-                    text += f"<b>{idx}, {title}</b>"
+                    text += f"{idx}, {title}"
                     media.append(
                        InputMediaPhoto(
                          media=media_url
@@ -100,7 +100,7 @@ async def Wallpapers_com(update, context):
                    )
       try:
           return await message.reply_media_group(
-                     media=media, quote=True, parse_mode=constants.ParseMode.HTML
+                     media=media, quote=True
               )
       except Exception as e:
                 return await msg.edit_text(f"❌ Error: {str(e)}")

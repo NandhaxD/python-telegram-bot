@@ -50,7 +50,8 @@ def admin_check(permission: str = False):
                                 "The bot is missing {} permission.".format(permission)
                             )
                             return
-                return await func(update, context, *args, **kwargs)
+                else:
+                   return await func(update, context, *args, **kwargs)
             else:
                 if user.status not in STATUS:
                     await message.reply_text(

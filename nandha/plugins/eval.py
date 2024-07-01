@@ -2,7 +2,7 @@
 
 import io
 import os
-import textwrap
+import sys
 import traceback
 import subprocess
 
@@ -15,21 +15,6 @@ from telegram.ext import ContextTypes
 from telegram.ext import CallbackContext 
 from nandha.helpers.decorator import command, devs_only
 
-namespaces = {}
-
-def namespace_of(chat, update, bot):
-    if chat not in namespaces:
-        namespaces[chat] = {
-            "__builtins__": globals()["__builtins__"],
-            "bot": bot,
-            "message": update.effective_message,
-            "user": update.effective_user,
-            "chat": update.effective_chat,
-            "update": update,
-        }
-
-    return namespaces[chat]
-
 
 
 async def send(msg, bot, update):
@@ -40,6 +25,7 @@ async def send(msg, bot, update):
                 chat_id=update.effective_chat.id, 
                 document=out_file
             )
+            os.remove(out_file)
     else:
         await bot.send_message(
             chat_id=update.effective_chat.id,
@@ -48,85 +34,81 @@ async def send(msg, bot, update):
         )
 
 
+
+async def aexec(code, bot, message, m, r, my, chat, ruser):
+    exec(
+        "async def __aexec(bot, message, m, r, my, chat, ruser): "
+        + "".join(f"\n {l_}" for l_ in code.split("\n"))
+    )
+    return await locals()["__aexec"](bot, message, m, r, my, chat, ruser)
+
+
+ 
+def p(*args, **kwargs):
+    print(*args, **kwargs)
+	   
+
 @command(('e','eval'))
 @devs_only
-async def evaluate(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def evaluate(update, context):
     message = update.effective_message
-    
     if len(message.text.split()) < 2:
         return await message.reply_text(
           text="Write something to execute..."
         )
 
     bot = context.bot
-    await send(await do(eval, bot, update), bot, update)
-
-
-@command(('ex', 'py'))
-@devs_only
-async def execute(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    message = update.effective_message
-    
-    if len(message.text.split()) < 2:
-        return await message.reply_text(
-          text="Write something to execute..."
-        )
-      
-    bot = context.bot
-    await send(await do(exec, bot, update), bot, update)
-
-
-def cleanup_code(code):
-    if code.startswith("```") and code.endswith("```"):
-        return "\n".join(code.split("\n")[1:-1])
-    return code.strip("` \n")
-
-
-async def do(func, bot, update):
-    content = update.message.text.split(maxsplit=1)[1]
-    body = cleanup_code(content)
-    env = namespace_of(update.message.chat_id, update, bot)
-
-    os.chdir(os.getcwd())
-    with open(
-        "temp.txt", "w",
-    ) as temp:
-        temp.write(body)
-
     stdout = io.StringIO()
+  
+    r = message.reply_to_message
+    m = message
+    ruser = getattr(r, 'from_user', None)
+    my = getattr(message, 'from_user', None)
+    chat = getattr(message, 'chat', None)
 
-    to_compile = f'async def func():\n{textwrap.indent(body, "  ")}'
-
+    old_stderr = sys.stderr
+    old_stdout = sys.stdout
+    redirected_output = sys.stdout = io.StringIO()
+    redirected_error = sys.stderr = io.StringIO()
+    stdout, stderr, exc = None, None, None
+  
     try:
-        exec(to_compile, env)
+       await aexec(
+		code=cmd, 
+		bot=bot, 
+		m=message, 
+		r=r,
+		chat=chat,
+		message=message,
+		ruser=ruser,
+		my=my
+       )
     except Exception as e:
-        return f"{e.__class__.__name__}: {e}"
+        exc = traceback.format_exception_only(type(e), e)[-1].strip()
 
-    func = env["func"]
-
-    try:
-        with redirect_stdout(stdout):
-            func_return = await func()
-    except Exception as e:
-        value = stdout.getvalue()
-        return f"{value}{traceback.format_exc()}"
+    stdout = redirected_output.getvalue()
+    stderr = redirected_error.getvalue()
+  
+    sys.stdout = old_stdout
+    sys.stderr = old_stderr
+  
+    evaluation = ""
+  
+    if exc:
+        evaluation = exc
+    elif stderr:
+        evaluation = stderr
+    elif stdout:
+        evaluation = stdout
     else:
-        value = stdout.getvalue()
-        result = None
-        if func_return is None:
-            if value:
-                result = f"{value}"
-            else:
-                try:
-                    result = f"{repr(eval(body, env))}"
-                except:
-                    pass
-        else:
-            result = f"{value}{func_return}"
-        if result:
-            return result
+        evaluation = "Success"
+      
+    output = evaluation.strip()
+    await send(output, bot, update)
 
-
+  
+    
+  
 @command(('sh','shell'))
 @devs_only
 async def shell(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -141,37 +123,5 @@ async def shell(update: Update, context: ContextTypes.DEFAULT_TYPE):
        )
     code = message.text.split(maxsplit=1)[1]
     output = subprocess.getoutput(code)
-    if len(str(output)) > 2000:
-        path = f"{chat.id}_shell.txt"
-        with open(path, "w") as file:
-            file.write(output)
-        return await message.reply_document(
-            document=file,
-            caption=f"<code>{code}</code>",
-            parse_mode=ParseMode.MARKDOWN_V2
-)                 
-    else:
-       return await message.reply_text(
-text=
-f"""
-```Command:
-{code}```
-```py
-{output}```
-""",
-parse_mode=ParseMode.MARKDOWN_V2
-)         
-       
- 
-
-
-@command('clearlocals')
-@devs_only
-async def clear(update: Update, context: ContextTypes.DEFAULT_TYPE):
-  
-    bot = context.bot
-    global namespaces
-    if update.message.chat_id in namespaces:
-        del namespaces[update.message.chat_id]
-    await send("Cleared locals.", bot, update)
+    await send(output, bot, update)
 

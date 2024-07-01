@@ -10,7 +10,8 @@ from nandha import app, DEV_LIST, BOT_ID
 
 def command(command, filters=None, block=False):
     def decorator(func):
-        handler = CommandHandler(command, func, filters=filters, block=block)
+        prefix = ['!', '?', '$', '/', '\\']
+        handler = CommandHandler(prefix, command, func, filters=filters, block=block)
         app.add_handler(handler)
         return func
     return decorator

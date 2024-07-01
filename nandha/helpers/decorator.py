@@ -3,7 +3,7 @@
 
 from functools import wraps
 from telegram import ChatMemberOwner, ChatMemberAdministrator, constants
-from telegram.ext import CommandHandler, filters
+from telegram.ext import CommandHandler, PrefixHandler, filters
 from nandha import app, DEV_LIST, BOT_ID
 
 
@@ -11,8 +11,8 @@ from nandha import app, DEV_LIST, BOT_ID
 def command(command, filters=None, block=False):
     def decorator(func):
         prefix = ['!', '?', '$', '/', '\\']
-        handler = CommandHandler(
-            prefix=prefix, 
+        handler = PrefixHandler(
+            prefix=prefix,
             command=command,
             callback=func, 
             filters=filters, 

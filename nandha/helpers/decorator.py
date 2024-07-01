@@ -39,8 +39,8 @@ def admin_check(permission: str = False):
           
             if user.status in STATUS and bot.status in STATUS:
                 if not isinstance(user, ChatMemberOwner):
-                    if permission and (not hasattr(user, permission) and not hasattr(bot, permission)):
-                        if not hasattr(user, permission):
+                    if permission and (not getattr(user, permission) and not getattr(bot, permission)):
+                        if not getattr(user, permission):
                             await message.reply_text(
                                 "You are missing {} permission.".format(permission)
                             )

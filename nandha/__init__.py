@@ -1,7 +1,7 @@
 
 
 
-from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler
+from telegram.ext import ApplicationBuilder, PicklePersistence, ContextTypes, CommandHandler
 from config import *
 
 
@@ -21,6 +21,7 @@ logging.getLogger('httpx').setLevel(logging.WARNING)
 
 
 # Clients
-app = ApplicationBuilder().token(TOKEN).build()
+persistence = PicklePersistence(filepath='nandha')
+app = ApplicationBuilder().token(TOKEN).persistence(persistence).build()
 
 aiohttpsession = aiohttp.ClientSession()

@@ -5,10 +5,11 @@ from bs4 import BeautifulSoup
 from urllib.parse import quote
 from nandha import aiohttpsession as session, app
 from nandha.helpers.decorator import command
-from telegram import constants, InputMediaPhoto
+from telegram import constants, InputMediaPhoto, error
 
 
 import random
+import asyncio
 
 async def fetch_wallpapers(query: str = None, tag: str = 'anime'):
     '''
@@ -109,12 +110,15 @@ async def Wallpapers_com(update, context):
                    )
       try:
          await message.reply_media_group(
-                     media=media, quote=True, parse_mode=constants.ParseMode.MARKDOWN
+           media=media, quote=True, parse_mode=constants.ParseMode.MARKDOWN
               )
          await msg.delete()
-      except Exception as e:
-             return await message.reply_text(f"❌ Error: {str(e)}")
-          
+      except error.TimedOut:
+           await asyncio.sleep(2)
+      except error.TelegramError as e:
+           await msg.delete()
+           await message.reply_text(f"❌ Error: {str(e)}")
+      
 
   
 

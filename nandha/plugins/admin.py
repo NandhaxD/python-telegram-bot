@@ -15,7 +15,8 @@ async def GetInvite(update, context):
     chat = await bot.get_chat(message.chat.id)
     link = chat.invite_link
     await message.reply_text(
-        text=f"<b>✨ {chat.title} Invite Link</b>: {link}"
+        text=f"<b>✨ {chat.title} Invite Link</b>:\n{link}",
+        parse_mode=constants.ParseMode.HTML
     )
     
   

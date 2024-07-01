@@ -17,19 +17,21 @@ from nandha.helpers.decorator import command, devs_only
 
 
 
-async def send(msg, bot, update):
+async def send(msg, bot, update, message_id):
     if len(str(msg)) > 2000:
         with io.BytesIO(str.encode(msg)) as out_file:
             out_file.name = "output.txt"
             await bot.send_document(
                 chat_id=update.effective_chat.id, 
-                document=out_file
+                document=out_file,
+                reply_to_message_id=message_id
             )
             os.remove(out_file)
     else:
         await bot.send_message(
             chat_id=update.effective_chat.id,
             text=f"```python\n{msg}```",
+            reply_to_message_id=message_id,
             parse_mode=ParseMode.MARKDOWN_V2,
         )
 
@@ -59,9 +61,14 @@ async def evaluate(update, context):
 
     bot = context.bot
     stdout = io.StringIO()
+        
+
+    cmd = message.text.split(maxsplit=1)[1]
   
     r = message.reply_to_message
     m = message
+    message_id = m.message_id
+        
     ruser = getattr(r, 'from_user', None)
     my = getattr(message, 'from_user', None)
     chat = getattr(message, 'chat', None)
@@ -104,7 +111,7 @@ async def evaluate(update, context):
         evaluation = "Success"
       
     output = evaluation.strip()
-    await send(output, bot, update)
+    await send(output, bot, update, message_id)
 
   
     
@@ -116,12 +123,14 @@ async def shell(update: Update, context: ContextTypes.DEFAULT_TYPE):
     bot = context.bot
     message = update.effective_message
     chat = update.effective_chat
-  
+
+    message_id = message.message_id
+        
     if not len(message.text.split()) >= 2:
        return await message.reply_text(
           "Write something to execute.."
        )
     code = message.text.split(maxsplit=1)[1]
     output = subprocess.getoutput(code)
-    await send(output, bot, update)
+    await send(output, bot, update, message_id)
 

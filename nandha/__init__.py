@@ -21,7 +21,7 @@ logging.getLogger('httpx').setLevel(logging.WARNING)
 
 
 # Clients
-persistence = PicklePersistence(filepath='db.txt')
+persistence = PicklePersistence(filepath='db.py')
 app = ApplicationBuilder().token(TOKEN).persistence(persistence).build()
 
 aiohttpsession = aiohttp.ClientSession()

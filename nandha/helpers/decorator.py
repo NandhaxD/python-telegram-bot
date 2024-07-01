@@ -38,8 +38,8 @@ def admin_check(permission: str = False):
             bot = await chat.get_member(BOT_ID)
           
             if user.status in STATUS and bot.status in STATUS:
-                if permission and not isinstance(user, ChatMemberOwner):
-                    if not hasattr(user, permission) or not hasattr(bot, permission):
+                if not isinstance(user, ChatMemberOwner):
+                    if permission and (not hasattr(user, permission) or not hasattr(bot, permission)):
                         if not hasattr(user, permission):
                             await message.reply_text(
                                 "You are missing {} permission.".format(permission)
@@ -50,6 +50,10 @@ def admin_check(permission: str = False):
                                 "The bot is missing {} permission.".format(permission)
                             )
                             return
+                          
+                    else:
+                       return await func(update, context, *args, **kwargs)
+                      
                 else:
                    return await func(update, context, *args, **kwargs)
             else:

@@ -26,9 +26,11 @@ def admin_check(permission: str = None):
             chat = update.effective_chat
             user = update.effective_user
             message = update.effective_message
-            
-            if getattr(message, 'sender_chat', None): 
-                 return
+
+            IS_PRIVATE = message.chat.type == constants.ChatType.PRIVATE
+          
+            if getattr(message, 'sender_chat', None) or IS_PRIVATE: 
+                  return
             
             STATUS = [
                 constants.ChatMemberStatus.ADMINISTRATOR, 
@@ -47,23 +49,27 @@ def admin_check(permission: str = None):
                         bot_permission = getattr(bot_member, permission, False)
                         if not user_permission:
                             await message.reply_text(
-                                f"You are missing the `{permission}` permission."
+                                f"*You are missing the [ {permission} ] permission.*",
+                                parse_mode=constants.ParseMode.MARKDOWN
                             )
                             return
                         elif not bot_permission:
                             await message.reply_text(
-                                f"The bot is missing the `{permission}` permission."
+                                f"The bot is missing the [ {permission} ] permission.",
+                                parse_mode=constants.ParseMode.MARKDOWN
                             )
                             return
                     return await func(update, context, *args, **kwargs)
             else:
                 if user_member.status not in STATUS:
                     await message.reply_text(
-                        "You are not an admin in this chat."
+                        "*You are not an admin in this chat.*",
+                      parse_mode=constants.ParseMode.MARKDOWN
                     )
                 else:
                     await message.reply_text(
-                        "The bot is not an admin in this chat."
+                        "*The bot is not an admin in this chat.*",
+                        parse_mode=constants.ParseMode.MARKDOWN
                     )
                 return
                 

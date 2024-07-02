@@ -17,13 +17,23 @@ from PIL import Image
 
 @command('paste')
 async def Paste(update, context):
+   '''
+   Purpose: 
+        Paste code or text fike in dpaste.org for share.
+   Requires:
+        Reply to a t ext message o r text file. 
+   Return:
+        Paste link and raw link for of dpaste.org.
+   '''
    
    message = update.message
    bot = context.bot
    reply = message.reply_to_message
 
-   msg = await message.reply_text("⚡ Getting Link...")
-   if reply.document and reply.document.mime_type.startswith('text'):
+   msg = await message.reply_text(
+      "*⚡ Getting Link...*", parse_mode=constants.ParseMode.MARKDOWN
+   )
+   if reply and reply.document and reply.document.mime_type.startswith('text'):
        file = await (await bot.get_file(reply.document.file_id)).download_to_drive()
        with open(file, 'r') as f:
             content = f.read()
@@ -31,8 +41,13 @@ async def Paste(update, context):
    elif reply.text or reply.caption:
        content = reply.text or reply.caption
    else:
-       return await message.edit_text("Reply to a text or text file document...")
-   api_url = "https://dpaste.org/api/"
+       return await msg.edit_text(
+           text="*Reply to a text or text file document...*",
+           parse_mode=constants.ParseMode.MARKDOWN
+       )
+      
+   api_url = "https://dpaste.org/api/" 
+   
    try:
 
       async with session.post(

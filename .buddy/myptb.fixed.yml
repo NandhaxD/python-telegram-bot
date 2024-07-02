@@ -10,7 +10,7 @@
     docker_image_name: "library/python"
     docker_image_tag: "3.9"
     execute_commands:
-    - "install -r requirements.txt && python3 -m src.nandha"
+    - "pip install -r requirements.txt && python3 -m src.nandha"
     - ""
     cached_dirs:
     - "/root/.cache/pip"

@@ -1,0 +1,13 @@
+
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "nandha/__main__.py",
+      "use": "@vercel/python",
+      "config": {
+        "runtime": "python3.10"
+      }
+    }
+  ]
+}

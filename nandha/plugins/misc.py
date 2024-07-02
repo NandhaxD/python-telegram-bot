@@ -86,6 +86,15 @@ async def Paste(update, context):
 
 @command(('tm', 'tgm'))
 async def Telegraph(update, context):
+    '''
+    Purpose:
+       Get image/gif link for share and use it for many purpose.
+    Requires:
+       Reply to image or gif 
+    Returns:
+       Get a sharable link of media 
+    '''
+   
     message = update.message
     bot = context.bot
 

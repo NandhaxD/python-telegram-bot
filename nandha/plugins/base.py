@@ -4,8 +4,6 @@
 from telegram import Update, constants, helpers, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CommandHandler, ContextTypes
 from nandha import app, SUPPORT_CHAT
-from nandha.sql.users import add_user, get_all_users
-from nandha.sql.chats import get_all_chats, add_chat
 from nandha.helpers.decorator import command
 
 
@@ -18,44 +16,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     mention = helpers.mention_markdown(user_id=user.id, name=user.first_name, version=2)
   
-    if chat.type == constants.ChatType.PRIVATE:
-
-        users_db = get_all_users()
-      
-        if not user.id in users_db:
-
-             obj = user.to_dict()
-             add_user(obj) # adding the user data to database
-          
-             await bot.send_message(
-            chat_id=SUPPORT_CHAT,
-            text=(
-f"""              
-⚡ *New User*:
-
-*🆔 ID*: `{user.id}`
-*🙋 User*: *{mention}*
-
-"""),
-          parse_mode=constants.ParseMode.MARKDOWN_V2)
-
-    else:
-        chats_db = get_all_chats()
-        if not chat.id in chats_db:
-            add_chat(chat.id) # adding the chat data to database
-          
-            await bot.send_message(
-            chat_id=SUPPORT_CHAT,
-            text=(
-f"""              
-⚡ *New Chat*:
-
-*🆔 ID*: `{chat.id}`
-*🙋 Chat*: *{chat.title}*
-
-"""),
-          parse_mode=constants.ParseMode.MARKDOWN_V2)
-
     
     keyboard = [
         [

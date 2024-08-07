@@ -1,80 +1,54 @@
-from nandha.sql import SESSION, BASE
-from sqlalchemy import Column, Integer, String, Boolean, BigInteger
-import threading
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy import String, ForeignKey, Text, Integer, select
+from typing import List
+import asyncio
+from sqlalchemy.ext.asyncio import (
+    create_async_engine,
+    async_sessionmaker,
+    AsyncSession
+)
 
-class Users(BASE):
+from nandha.sql import engine, Base
+
+class User(Base):
     __tablename__ = 'users'
-    user_id = Column(BigInteger, primary_key=True)
-    first_name = Column(String)
-    username = Column(String)
-    is_bot = Column(Boolean)
-    language_code = Column(String)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    username: Mapped[str] = mapped_column(nullable=False)
+    email: Mapped[str] = mapped_column(nullable=False)
+    bio: Mapped[str] = mapped_column(nullable=False)
 
-    def __init__(self, user_id, first_name, username, is_bot, language_code):
-        self.user_id = user_id
-        self.first_name = first_name
-        self.username = username
-        self.is_bot = is_bot
-        self.language_code = language_code
+    def __repr__(self) -> str:
+        return f"<User {self.username}>"
 
-# Create the table if it doesn't exist
-Users.__table__.create(checkfirst=True)
+async def add_user(sessionmaker: async_sessionmaker[AsyncSession], user_data: dict):
+    async with sessionmaker() as session:
+        async with session.begin():
+            user = User(**user_data)
+            session.add(user)
+            await session.commit()
 
-# Thread-safe lock for database operations
-INSERTION_LOCK = threading.RLock()
+async def get_user(sessionmaker: async_sessionmaker[AsyncSession], user_id: int):
+    async with sessionmaker() as session:
+        statement = select(User).where(User.id == user_id)
+        result = await session.execute(statement)
+        user = result.scalars().one()
+        return user
 
+async def update_user(sessionmaker: async_sessionmaker[AsyncSession], user_id: int, user_data: dict):
+    async with sessionmaker() as session:
+        statement = select(User).where(User.id == user_id)
+        result = await session.execute(statement)
+        user = result.scalars().one()
+        user.username = user_data['username']
+        user.email = user_data['email']
+        user.bio = user_data['bio']
+        await session.commit()
 
-def add_user(obj):
-    with INSERTION_LOCK:
-        try:
-            user_id = obj['id']
-            user = SESSION.query(Users).get(user_id)
-            if not user:
-                user = Users(
-                    user_id=user_id,
-                    first_name=obj.get('first_name'),
-                    username=obj.get('username'),
-                    is_bot=obj.get('is_bot'),
-                    language_code=obj.get('language_code')
-                )
-                SESSION.add(user)
-                SESSION.commit()
-              
-            return    
-        except Exception as e:
-            SESSION.rollback()
-            print(f"Error adding user: {e}")
+async def delete_user(sessionmaker: async_sessionmaker[AsyncSession], user_id: int):
+    async with sessionmaker() as session:
+        statement = select(User).where(User.id == user_id)
+        result = await session.execute(statement)
+        user = result.scalars().one()
+        await session.delete(user)
+        await session.commit()
 
-def remove_user(user_id):
-    with INSERTION_LOCK:
-        try:
-            user = SESSION.query(Users).get(user_id)
-            if user:
-                SESSION.delete(user)
-                SESSION.commit()
-                
-        except Exception as e:
-            SESSION.rollback()
-            print(f"Error removing user: {e}")
-
-
-def get_user_data(user_id):
-    try:
-        user = SESSION.query(Users).get(user_id)
-        data = {}
-        if user:
-            data = { key: value for key, value in user.__dict__.items() if not key.startswith('_') }
-        return data
-    except Exception as e:
-        print(f"Error getting user: {e}")
-        return data
-
-
-
-
-def get_all_users():
-    try:
-        return [user.user_id for user in SESSION.query(Users).all()]
-    except Exception as e:
-        print(f"Error getting all users: {e}")
-        return []
